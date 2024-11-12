@@ -208,6 +208,8 @@ function startGame() {
   activePairs = [];
   selectedRussianWord = null;
   updateScore();
+  timerElement.textContent = timeLeft;
+  timerElement.classList.remove('critical');
   startButton.disabled = true;
   startTimer();
   generateInitialPairs();
@@ -341,8 +343,25 @@ function shuffleArray(array) {
 
 // Конец игры
 function endGame() {
-  alert('Игра окончена! Набранные очки: ' + score);
+  clearInterval(timerInterval);
+  const playAgain = confirm(`Игра окончена! Набранные очки: ${score}\nХотите сыграть снова?`);
+  if (playAgain) {
+    startGame();
+  } else {
+    resetGame();
+  }
+}
+
+// Сброс игры
+function resetGame() {
+  score = 0;
+  timeLeft = 60;
+  timerElement.textContent = timeLeft;
+  timerElement.classList.remove('critical');
   startButton.disabled = false;
+  scoreElement.textContent = 'Очки: 0';
+  document.getElementById('russianWordsColumn').innerHTML = '';
+  document.getElementById('englishWordsColumn').innerHTML = '';
 }
 
 // Событие для кнопки начать
