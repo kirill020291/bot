@@ -7,7 +7,7 @@
 <style>
   body {
     background-color: #87CEEB;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Arial', sans-serif; /* Универсальный шрифт */
     text-align: center;
     overflow: hidden;
   }
@@ -114,6 +114,9 @@
   <div class="column" id="russianWordsColumn"></div>
   <div class="column" id="englishWordsColumn"></div>
 </div>
+
+<audio id="correctSound" src="correct-answer.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="wrong-answer.mp3" preload="auto"></audio>
 
 <script>
 
@@ -269,6 +272,7 @@ const wordPairs = [
   { russian: "капитан", english: "captain" }
 ];
 
+
 let score = 0;
 let streak = 0;
 let timeLeft = 60;
@@ -281,6 +285,10 @@ let activePairs = [];
 const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
 const startButton = document.getElementById('startButton');
+
+// Звуки
+const correctSound = document.getElementById('correctSound');
+const wrongSound = document.getElementById('wrongSound');
 
 // Начало игры
 function startGame() {
@@ -382,6 +390,7 @@ function checkMatch(pair, selectedEnglish, element) {
     selectedRussianWord.element.classList.add('correct');
     score += ++streak;
     updateScore();
+    correctSound.play(); // Воспроизведение звука при правильном ответе
     
     setTimeout(() => {
       replaceMatchedPair(selectedRussianWord.pair);
@@ -393,61 +402,40 @@ function checkMatch(pair, selectedEnglish, element) {
     streak = 0;
     score = Math.max(0, score - 1);
     updateScore();
-    setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
+    wrongSound.play(); // Воспроизведение звука при неправильном ответе
+    
+    setTimeout(() => resetSelection(), 500);
   }
 }
 
-// Удаление и замена пары
-function replaceMatchedPair(matchedPair) {
-  const index = activePairs.findIndex(pair => pair === matchedPair);
-  if (index !== -1) activePairs.splice(index, 1);
-  if (availablePairs.length > 0) {
-    const newPair = availablePairs.splice(Math.floor(Math.random() * availablePairs.length), 1)[0];
-    activePairs.push(newPair);
-  }
-  selectedRussianWord = null;
+// Замена пары после правильного ответа
+function replaceMatchedPair(pair) {
+  availablePairs.push(pair);
+  activePairs = activePairs.filter(p => p !== pair);
+  if (availablePairs.length > 0) activePairs.push(getRandomPairs(1)[0]);
 }
 
-// Сброс выделения и цвета
-function resetPair(element1, element2) {
-  element1.classList.remove('correct', 'wrong', 'selected');
-  element2.classList.remove('correct', 'wrong', 'selected');
+// Сброс выбора
+function resetSelection() {
+  selectedRussianWord.element.classList.remove('selected', 'correct', 'wrong');
   selectedRussianWord = null;
+  renderWords(activePairs);
 }
 
-// Перемешивание массива
+// Конец игры
+function endGame() {
+  alert(`Игра окончена! Ваши очки: ${score}`);
+  startButton.disabled = false;
+}
+
+startButton.onclick = startGame;
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
-// Конец игры
-function endGame() {
-  clearInterval(timerInterval);
-  const playAgain = confirm(`Игра окончена! Набранные очки: ${score}\nХотите сыграть снова?`);
-  if (playAgain) {
-    startGame();
-  } else {
-    resetGame();
-  }
-}
-
-// Сброс игры
-function resetGame() {
-  score = 0;
-  timeLeft = 60;
-  timerElement.textContent = timeLeft;
-  timerElement.classList.remove('critical');
-  startButton.disabled = false;
-  scoreElement.textContent = 'Очки: 0';
-  document.getElementById('russianWordsColumn').innerHTML = '';
-  document.getElementById('englishWordsColumn').innerHTML = '';
-}
-
-// Событие для кнопки начать
-startButton.addEventListener('click', startGame);
 </script>
 
 </body>
