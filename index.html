@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Игра с угадыванием слов</title>
-<!-- Подключаем шрифт Roboto из Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 <style>
   body {
     background-color: #87CEEB;
-    font-family: 'Roboto', sans-serif; /* Используем Roboto */
+    font-family: 'Comic Sans MS', cursive, sans-serif;
     text-align: center;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
   }
 
-  /* Добавление облаков */
+  /* Облака в стиле пиксельной игры */
   .clouds {
     position: absolute;
     top: 0;
@@ -27,42 +27,47 @@
 
   .cloud {
     position: absolute;
-    width: 200px;
-    height: 100px;
+    width: 48px;
+    height: 24px;
     background: #FFFFFF;
-    opacity: 0.6;
-    border-radius: 100px;
-    animation: float 15s linear infinite;
+    opacity: 0.8;
+    border-radius: 4px;
+    animation: float 10s linear infinite;
   }
 
   .cloud:nth-child(1) { left: 0%; top: 20%; animation-delay: 0s; }
-  .cloud:nth-child(2) { left: 25%; top: 40%; animation-delay: 5s; }
-  .cloud:nth-child(3) { left: 50%; top: 60%; animation-delay: 2s; }
-  .cloud:nth-child(4) { left: 75%; top: 80%; animation-delay: 8s; }
+  .cloud:nth-child(2) { left: 25%; top: 40%; animation-delay: 3s; }
+  .cloud:nth-child(3) { left: 50%; top: 60%; animation-delay: 5s; }
+  .cloud:nth-child(4) { left: 75%; top: 80%; animation-delay: 7s; }
   .cloud:nth-child(5) { left: 100%; top: 30%; animation-delay: 10s; }
 
   @keyframes float {
-    0% { transform: translateX(-200px); }
+    0% { transform: translateX(-50px); }
     100% { transform: translateX(100vw); }
   }
 
+  /* Аниме стиль */
   .header {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 10px;
     margin-top: 20px;
-    gap: 20px;
   }
 
   .timer, .score {
-    font-size: 24px;
+    font-size: 28px;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
 
   .game-board {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 30px;
   }
 
   .column {
@@ -86,6 +91,7 @@
     transform: scale(1);
     border-radius: 8px; /* Сглаженные углы */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 20px;
   }
 
   .selected { background-color: #dcdcdc; }
@@ -94,6 +100,22 @@
   .timer.critical { color: red; animation: blink 1s step-start infinite; }
 
   @keyframes blink { 50% { opacity: 0; } }
+
+  #startButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  #startButton:hover {
+    background-color: #45a049;
+  }
+  
 </style>
 </head>
 <body>
