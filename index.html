@@ -5,25 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Игра с угадыванием слов</title>
 <style>
-  body { background-color: #87CEEB; font-family: Arial, sans-serif; }
+  body { background-color: #87CEEB; font-family: Arial, sans-serif; text-align: center; }
+  .header { display: flex; justify-content: center; align-items: center; margin-top: 20px; gap: 20px; }
+  .timer, .score { font-size: 24px; }
   .game-board { display: flex; justify-content: center; align-items: center; margin-top: 20px; }
-  .column { display: flex; flex-direction: column; }
+  .column { display: flex; flex-direction: column; margin: 0 20px; }
   .box { width: 100px; height: 50px; margin: 10px; background-color: white; color: black; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background-color 0.3s ease; }
   .correct { background-color: green; }
   .wrong { background-color: red; }
-  .timer { color: black; font-size: 24px; }
   .timer.critical { color: red; animation: blink 1s step-start infinite; }
   @keyframes blink { 50% { opacity: 0; } }
 </style>
 </head>
 <body>
 
-<div class="timer" id="timer">60</div>
+<div class="header">
+  <div class="timer" id="timer">60</div>
+  <button id="startButton">Начать игру</button>
+  <div class="score" id="score">Очки: 0</div>
+</div>
+
 <div class="game-board" id="gameBoard">
   <div class="column" id="russianWordsColumn"></div>
   <div class="column" id="englishWordsColumn"></div>
 </div>
-<div id="score">Очки: 0</div>
 
 <script>
 // Массивы слов (только для примера, можно заменить на массив из 1000 слов)
@@ -135,39 +140,34 @@ const russianWords = [
     "полицейский", "солдат", "пожарный", "охранник", "детектив", "шпион", "пилот", "навигатор", "оператор"
 ];
 
-// Перемешивание русского списка
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
-// Начальные переменные
 let score = 0;
 let streak = 0;
 let timeLeft = 60;
 let selectedRussianWord = null;
+let timerInterval;
+
+// Элементы DOM
 const timerElement = document.getElementById('timer');
+const scoreElement = document.getElementById('score');
+const startButton = document.getElementById('startButton');
 
 // Начало игры
 function startGame() {
   score = 0;
   streak = 0;
   timeLeft = 60;
+  selectedRussianWord = null;
+  
   updateScore();
+  startButton.disabled = true;
   startTimer();
   renderWords();
 }
 
-// Обновление счета
-function updateScore() {
-  document.getElementById('score').innerText = `Очки: ${score}`;
-}
-
-// Таймер
+// Обновление таймера
 function startTimer() {
-  const timerInterval = setInterval(() => {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
     timeLeft--;
     timerElement.textContent = timeLeft;
     if (timeLeft <= 15) timerElement.classList.add('critical');
@@ -178,7 +178,12 @@ function startTimer() {
   }, 1000);
 }
 
-// Отрисовка слов
+// Обновление счета
+function updateScore() {
+  scoreElement.textContent = `Очки: ${score}`;
+}
+
+// Рендеринг слов
 function renderWords() {
   const russianWordsColumn = document.getElementById('russianWordsColumn');
   const englishWordsColumn = document.getElementById('englishWordsColumn');
@@ -186,15 +191,21 @@ function renderWords() {
   russianWordsColumn.innerHTML = '';
   englishWordsColumn.innerHTML = '';
   
-  // Копируем массивы слов и перемешиваем английские слова
-  const wordsPair = russianWords.map((word, index) => ({ russian: word, english: englishWords[index] }));
-  shuffleArray(wordsPair);
+  // Выбираем случайные 5 пар слов
+  const wordPairs = [];
+  while (wordPairs.length < 5) {
+    const index = Math.floor(Math.random() * englishWords.length);
+    const pair = { russian: russianWords[index], english: englishWords[index] };
+    if (!wordPairs.some(p => p.russian === pair.russian)) {
+      wordPairs.push(pair);
+    }
+  }
   
-  const shuffledEnglishWords = wordsPair.map(pair => pair.english);
+  // Перемешиваем английские слова и отображаем их в случайном порядке
+  const shuffledEnglishWords = wordPairs.map(pair => pair.english);
   shuffleArray(shuffledEnglishWords);
   
-  // Отображаем слова в столбцах
-  wordsPair.forEach((pair, i) => {
+  wordPairs.forEach((pair, i) => {
     const rusBox = document.createElement('div');
     const engBox = document.createElement('div');
     
@@ -204,7 +215,7 @@ function renderWords() {
     rusBox.innerText = pair.russian;
     engBox.innerText = shuffledEnglishWords[i];
     
-    // Добавляем обработчики нажатий
+    // Обработчики клика
     rusBox.onclick = () => selectRussianWord(pair.russian, rusBox);
     engBox.onclick = () => checkMatch(pair.russian, engBox.innerText, engBox);
     
@@ -213,9 +224,11 @@ function renderWords() {
   });
 }
 
-// Выбор русского слова
+// Функция выбора русского слова
 function selectRussianWord(word, element) {
+  if (selectedRussianWord) selectedRussianWord.element.classList.remove('selected');
   selectedRussianWord = { word, element };
+  element.classList.add('selected');
 }
 
 // Проверка совпадения
@@ -228,7 +241,10 @@ function checkMatch(russianWord, englishWord, element) {
     selectedRussianWord.element.classList.add('correct');
     score += ++streak;
     updateScore();
-    setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
+    setTimeout(() => {
+      resetPair(element, selectedRussianWord.element);
+      renderWords(); // Обновляем пары слов после правильного ответа
+    }, 500);
   } else {
     element.classList.add('wrong');
     if (selectedRussianWord) selectedRussianWord.element.classList.add('wrong');
@@ -239,27 +255,29 @@ function checkMatch(russianWord, englishWord, element) {
   }
 }
 
-// Сброс цвета и замена слов
+// Сброс выделения и цвета
 function resetPair(element1, element2) {
-  element1.classList.remove('correct', 'wrong');
-  element2.classList.remove('correct', 'wrong');
-  renderWords(); // Обновляем слова на новые
+  element1.classList.remove('correct', 'wrong', 'selected');
+  element2.classList.remove('correct', 'wrong', 'selected');
   selectedRussianWord = null;
+}
+
+// Перемешивание массива
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
 // Конец игры
 function endGame() {
   alert('Игра окончена! Набранные очки: ' + score);
-  const restart = confirm("Начать заново?");
-  if (restart) {
-    startGame();
-  } else {
-    // Здесь можно добавить логику выхода в меню
-  }
+  startButton.disabled = false;
 }
 
-// Начало игры
-startGame();
+// Событие для кнопки начать
+startButton.addEventListener('click', startGame);
 </script>
 
 </body>
