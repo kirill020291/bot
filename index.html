@@ -34,113 +34,6 @@
 
 <script>
 // Массивы слов (только для примера, можно заменить на массив из 1000 слов)
-const englishWords = [
-    "apple", "house", "car", "computer", "sun", "table", "dog", "cat", "book", "water",
-    "tree", "phone", "food", "city", "school", "window", "door", "pen", "road", "flower",
-    "river", "cloud", "star", "light", "girl", "boy", "day", "night", "music", "world",
-    "friend", "family", "baby", "animal", "fish", "bird", "mountain", "forest", "ocean",
-    "lake", "river", "beach", "sand", "salt", "sugar", "tea", "coffee", "milk", "bread",
-    "cheese", "butter", "egg", "chicken", "meat", "rice", "pasta", "salad", "fruit",
-    "vegetable", "orange", "lemon", "banana", "grape", "apple", "pear", "peach", "plum",
-    "potato", "carrot", "onion", "tomato", "cucumber", "pepper", "lettuce", "spinach",
-    "cabbage", "garlic", "ginger", "apple", "tree", "leaf", "flower", "seed", "grass",
-    "stone", "rock", "earth", "soil", "field", "forest", "jungle", "desert", "rain",
-    "snow", "ice", "fire", "smoke", "air", "wind", "storm", "sky", "cloud", "sun",
-    "moon", "star", "planet", "space", "universe", "galaxy", "ocean", "lake", "river",
-    "sea", "beach", "sand", "wave", "boat", "ship", "island", "peninsula", "coast",
-    "mountain", "hill", "valley", "cave", "forest", "jungle", "desert", "plain", "field",
-    "road", "street", "bridge", "tunnel", "car", "truck", "bus", "train", "bicycle",
-    "motorcycle", "airplane", "helicopter", "ship", "boat", "submarine", "rocket",
-    "satellite", "spaceship", "astronaut", "pilot", "sailor", "captain", "driver",
-    "teacher", "doctor", "nurse", "scientist", "engineer", "artist", "writer", "poet",
-    "musician", "singer", "dancer", "actor", "director", "painter", "sculptor", "chef",
-    "cook", "baker", "farmer", "gardener", "mechanic", "electrician", "plumber",
-    "builder", "carpenter", "blacksmith", "tailor", "barber", "hairdresser", "nail",
-    "hand", "finger", "leg", "foot", "eye", "ear", "nose", "mouth", "lip", "tooth",
-    "hair", "head", "face", "neck", "shoulder", "arm", "elbow", "wrist", "hand", "back",
-    "stomach", "chest", "heart", "lung", "liver", "kidney", "brain", "bone", "muscle",
-    "skin", "blood", "nerve", "finger", "toe", "nail", "skeleton", "medicine", "hospital",
-    "pharmacy", "clinic", "doctor", "nurse", "patient", "illness", "disease", "fever",
-    "cough", "cold", "flu", "headache", "stomachache", "toothache", "sore", "pain",
-    "wound", "injury", "cut", "bruise", "burn", "fracture", "sprain", "infection", "virus",
-    "bacteria", "germ", "antibiotic", "vaccine", "syringe", "needle", "pill", "tablet",
-    "capsule", "ointment", "cream", "bandage", "plaster", "therapy", "treatment", "cure",
-    "operation", "surgery", "scan", "x-ray", "blood test", "ultrasound", "medicine",
-    "psychologist", "psychiatrist", "dentist", "optician", "ophthalmologist", "surgeon",
-    "chemist", "scientist", "researcher", "engineer", "technician", "teacher", "lecturer",
-    "professor", "trainer", "coach", "instructor", "advisor", "consultant", "mentor",
-    "counselor", "therapist", "psychologist", "social worker", "librarian", "writer",
-    "journalist", "reporter", "editor", "translator", "interpreter", "artist", "painter",
-    "sculptor", "photographer", "musician", "singer", "dancer", "actor", "director",
-    "producer", "chef", "cook", "baker", "gardener", "farmer", "builder", "carpenter",
-    "tailor", "barber", "hairdresser", "mechanic", "electrician", "plumber", "driver",
-    "sailor", "pilot", "astronaut", "scientist", "mathematician", "physicist", "chemist",
-    "biologist", "geologist", "meteorologist", "astronomer", "historian", "philosopher",
-    "archaeologist", "linguist", "translator", "interpreter", "lawyer", "judge", "police",
-    "soldier", "firefighter", "guard", "security", "detective", "spy", "pilot", "navigator",
-    "operator", "engineer", "technician", "mechanic", "chemist", "scientist", "researcher",
-    "doctor", "nurse", "pharmacist", "dentist", "veterinarian", "surgeon", "therapist",
-    "psychologist", "psychiatrist", "teacher", "professor", "lecturer", "instructor", "coach",
-    "trainer", "advisor", "consultant", "mentor", "counselor", "social worker", "librarian",
-    "journalist", "reporter", "editor", "translator", "photographer", "artist", "writer",
-    "musician", "singer", "dancer", "actor", "director", "producer", "comedian", "magician",
-    "chef", "cook", "baker", "butcher", "gardener", "farmer", "builder", "carpenter",
-    "plumber", "electrician", "mechanic", "technician", "scientist", "engineer", "architect",
-    "mathematician", "physicist", "biologist", "chemist", "geologist", "astronomer",
-    "historian", "philosopher", "sociologist", "psychologist", "anthropologist",
-    "linguist", "translator", "interpreter"
-];
-
-const russianWords = [
-    "яблоко", "дом", "машина", "компьютер", "солнце", "стол", "собака", "кот", "книга", "вода",
-    "дерево", "телефон", "еда", "город", "школа", "окно", "дверь", "ручка", "дорога", "цветок",
-    "река", "облако", "звезда", "свет", "девочка", "мальчик", "день", "ночь", "музыка", "мир",
-    "друг", "семья", "малыш", "животное", "рыба", "птица", "гора", "лес", "океан", "озеро",
-    "река", "пляж", "песок", "соль", "сахар", "чай", "кофе", "молоко", "хлеб", "сыр", "масло",
-    "яйцо", "курица", "мясо", "рис", "макароны", "салат", "фрукты", "овощ", "апельсин", "лимон",
-    "банан", "виноград", "яблоко", "груша", "персик", "слива", "картофель", "морковь", "лук",
-    "помидор", "огурец", "перец", "салат", "шпинат", "капуста", "чеснок", "имбирь", "дерево",
-    "лист", "цветок", "семя", "трава", "камень", "скала", "земля", "почва", "поле", "лес",
-    "джунгли", "пустыня", "дождь", "снег", "лед", "огонь", "дым", "воздух", "ветер", "буря",
-    "небо", "облако", "солнце", "луна", "звезда", "планета", "космос", "вселенная", "галактика",
-    "океан", "озеро", "река", "море", "пляж", "песок", "волна", "лодка", "корабль", "остров",
-    "полуостров", "берег", "гора", "холм", "долина", "пещера", "лес", "джунгли", "пустыня",
-    "равнина", "поле", "дорога", "улица", "мост", "туннель", "машина", "грузовик", "автобус",
-    "поезд", "велосипед", "мотоцикл", "самолет", "вертолет", "корабль", "лодка", "подводная лодка",
-    "ракета", "спутник", "космический корабль", "астронавт", "пилот", "моряк", "капитан", "водитель",
-    "учитель", "врач", "медсестра", "ученый", "инженер", "художник", "писатель", "поэт", "музыкант",
-    "певец", "танцор", "актер", "режиссер", "художник", "скульптор", "шеф-повар", "повар", "пекарь",
-    "фермер", "садовник", "механик", "электрик", "сантехник", "строитель", "плотник", "кузнец", 
-    "портной", "парикмахер", "маникюр", "рука", "палец", "нога", "ступня", "глаз", "ухо", "нос",
-    "рот", "губа", "зуб", "волос", "голова", "лицо", "шея", "плечо", "рука", "локоть", "запястье",
-    "ладонь", "спина", "живот", "грудь", "сердце", "легкое", "печень", "почка", "мозг", "кость",
-    "мышца", "кожа", "кровь", "нерв", "палец", "палец ноги", "ноготь", "скелет", "лекарство",
-    "больница", "аптека", "клиника", "доктор", "медсестра", "пациент", "болезнь", "лихорадка",
-    "кашель", "простуда", "грипп", "головная боль", "боль в животе", "зубная боль", "рана",
-    "боль", "рана", "травма", "порез", "синяк", "ожог", "перелом", "растяжение", "инфекция",
-    "вирус", "бактерия", "микроб", "антибиотик", "вакцина", "шприц", "игла", "таблетка",
-    "крем", "мазь", "бинт", "пластырь", "терапия", "лечение", "лечение", "операция", "сканирование",
-    "рентген", "анализ крови", "УЗИ", "медикамент", "психолог", "психиатр", "стоматолог", 
-    "оптик", "офтальмолог", "хирург", "химик", "ученый", "исследователь", "инженер", "техник",
-    "учитель", "лектор", "профессор", "тренер", "инструктор", "советник", "консультант", 
-    "наставник", "консультант", "социальный работник", "библиотекарь", "писатель", "журналист",
-    "репортер", "редактор", "переводчик", "фотограф", "художник", "писатель", "музыкант",
-    "певец", "танцор", "актер", "режиссер", "продюсер", "комик", "волшебник", "шеф", "повар",
-    "пекарь", "мясник", "садовник", "фермер", "строитель", "плотник", "сантехник", "электрик",
-    "механик", "техник", "ученый", "инженер", "архитектор", "математик", "физик", "биолог",
-    "химик", "геолог", "астроном", "историк", "философ", "социолог", "психолог", "антрополог",
-    "лингвист", "переводчик", "юрист", "судья", "полицейский", "солдат", "пожарный", "охранник",
-    "детектив", "шпион", "пилот", "навигатор", "оператор", "инженер", "техник", "механик", 
-    "химик", "ученый", "исследователь", "доктор", "медсестра", "фармацевт", "стоматолог", 
-    "ветеринар", "хирург", "терапевт", "психолог", "психиатр", "учитель", "профессор", "лектор", 
-    "инструктор", "тренер", "советник", "консультант", "наставник", "психолог", "социальный работник",
-    "библиотекарь", "журналист", "редактор", "переводчик", "фотограф", "художник", "писатель", "музыкант",
-    "певец", "танцор", "актер", "режиссер", "продюсер", "комик", "маг", "шеф", "повар", "пекарь", 
-    "мясник", "садовник", "фермер", "строитель", "плотник", "сантехник", "электрик", "механик", "техник", 
-    "ученый", "инженер", "архитектор", "математик", "физик", "биолог", "геолог", "астроном", "историк", 
-    "философ", "социолог", "психолог", "антрополог", "лингвист", "переводчик", "юрист", "судья", 
-    "полицейский", "солдат", "пожарный", "охранник", "детектив", "шпион", "пилот", "навигатор", "оператор"
-];
 
 const wordPairs = [
   { russian: "яблоко", english: "apple" },
@@ -398,16 +291,16 @@ function selectRussianWord(pair, element) {
 function checkMatch(pair, selectedEnglish, element) {
   if (!selectedRussianWord) return;
   
-  const correctEnglish = pair.english;
+  const correctEnglish = selectedRussianWord.pair.english;
   
-  if (selectedRussianWord.pair === pair && selectedEnglish === correctEnglish) {
+  if (selectedRussianWord.pair.english === selectedEnglish) {
     element.classList.add('correct');
     selectedRussianWord.element.classList.add('correct');
     score += ++streak;
     updateScore();
     
     setTimeout(() => {
-      replaceMatchedPair(pair);
+      replaceMatchedPair(selectedRussianWord.pair);
       renderWords(activePairs);
     }, 500);
   } else {
