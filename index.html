@@ -10,9 +10,11 @@
   .timer, .score { font-size: 24px; }
   .game-board { display: flex; justify-content: center; align-items: center; margin-top: 20px; }
   .column { display: flex; flex-direction: column; margin: 0 20px; }
-  .box { width: 100px; height: 50px; margin: 10px; background-color: white; color: black; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background-color 0.3s ease; }
-  .correct { background-color: green; }
-  .wrong { background-color: red; }
+  .box { width: 120px; height: 50px; margin: 10px; background-color: white; color: black; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background-color 0.3s ease, transform 0.3s ease; opacity: 0; transform: scale(0.8); }
+  .box.show { opacity: 1; transform: scale(1); }
+  .selected { background-color: #dcdcdc; }
+  .correct { background-color: green; transform: scale(1.1); }
+  .wrong { background-color: red; transform: scale(1.1); }
   .timer.critical { color: red; animation: blink 1s step-start infinite; }
   @keyframes blink { 50% { opacity: 0; } }
 </style>
@@ -140,13 +142,19 @@ const russianWords = [
     "полицейский", "солдат", "пожарный", "охранник", "детектив", "шпион", "пилот", "навигатор", "оператор"
 ];
 
+
+// Полные списки слов (10 слов для примера)
+const englishWords = ["apple", "house", "car", "computer", "sun", "book", "cat", "dog", "tree", "sky"];
+const russianWords = ["яблоко", "дом", "машина", "компьютер", "солнце", "книга", "кот", "собака", "дерево", "небо"];
+
 let score = 0;
 let streak = 0;
 let timeLeft = 60;
 let selectedRussianWord = null;
 let timerInterval;
+let availableWords;
 
-// Элементы DOM
+// DOM-элементы
 const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
 const startButton = document.getElementById('startButton');
@@ -156,8 +164,9 @@ function startGame() {
   score = 0;
   streak = 0;
   timeLeft = 60;
+  availableWords = englishWords.map((eng, i) => ({ english: eng, russian: russianWords[i] }));
   selectedRussianWord = null;
-  
+
   updateScore();
   startButton.disabled = true;
   startTimer();
@@ -191,31 +200,29 @@ function renderWords() {
   russianWordsColumn.innerHTML = '';
   englishWordsColumn.innerHTML = '';
   
-  // Выбираем случайные 5 пар слов
-  const wordPairs = [];
-  while (wordPairs.length < 5) {
-    const index = Math.floor(Math.random() * englishWords.length);
-    const pair = { russian: russianWords[index], english: englishWords[index] };
-    if (!wordPairs.some(p => p.russian === pair.russian)) {
-      wordPairs.push(pair);
-    }
+  // Выбираем случайные 5 пар слов из доступных
+  const selectedPairs = [];
+  while (selectedPairs.length < 5 && availableWords.length > 0) {
+    const randomIndex = Math.floor(Math.random() * availableWords.length);
+    selectedPairs.push(availableWords[randomIndex]);
   }
-  
-  // Перемешиваем английские слова и отображаем их в случайном порядке
-  const shuffledEnglishWords = wordPairs.map(pair => pair.english);
+
+  // Перемешиваем английские слова для случайного порядка
+  const shuffledEnglishWords = selectedPairs.map(pair => pair.english);
   shuffleArray(shuffledEnglishWords);
   
-  wordPairs.forEach((pair, i) => {
+  // Отображаем слова в столбцах с анимацией появления
+  selectedPairs.forEach((pair, i) => {
     const rusBox = document.createElement('div');
     const engBox = document.createElement('div');
     
-    rusBox.classList.add('box');
-    engBox.classList.add('box');
+    rusBox.classList.add('box', 'show');
+    engBox.classList.add('box', 'show');
     
     rusBox.innerText = pair.russian;
     engBox.innerText = shuffledEnglishWords[i];
     
-    // Обработчики клика
+    // Добавляем обработчики клика
     rusBox.onclick = () => selectRussianWord(pair.russian, rusBox);
     engBox.onclick = () => checkMatch(pair.russian, engBox.innerText, engBox);
     
@@ -241,8 +248,12 @@ function checkMatch(russianWord, englishWord, element) {
     selectedRussianWord.element.classList.add('correct');
     score += ++streak;
     updateScore();
+
+    // Удаление угаданных слов из списка доступных и добавление новой пары
     setTimeout(() => {
-      resetPair(element, selectedRussianWord.element);
+      const rusEl = selectedRussianWord.element;
+      resetPair(element, rusEl);
+      availableWords = availableWords.filter(pair => pair.russian !== russianWord);
       renderWords(); // Обновляем пары слов после правильного ответа
     }, 500);
   } else {
