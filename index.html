@@ -199,6 +199,8 @@ function generateInitialPairs() {
 
 // Добавление новой пары слов
 function addNewPair() {
+  if (availableWords.length === 0) return;
+
   const randomIndex = Math.floor(Math.random() * availableWords.length);
   const newPair = availableWords.splice(randomIndex, 1)[0];
   activePairs.push(newPair);
@@ -212,7 +214,7 @@ function renderWords() {
   russianWordsColumn.innerHTML = '';
   englishWordsColumn.innerHTML = '';
   
-  // Перемешиваем английские слова для случайного порядка
+  // Перемешиваем английские слова для случайного порядка, но сохраняем пары
   const shuffledEnglishWords = activePairs.map(pair => pair.english);
   shuffleArray(shuffledEnglishWords);
   
