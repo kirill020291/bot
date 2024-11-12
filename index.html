@@ -148,6 +148,7 @@ let timeLeft = 60;
 let selectedRussianWord = null;
 let timerInterval;
 let availableWords;
+let activePairs;
 
 // DOM-элементы
 const timerElement = document.getElementById('timer');
@@ -165,7 +166,7 @@ function startGame() {
   updateScore();
   startButton.disabled = true;
   startTimer();
-  renderWords();
+  generateInitialPairs();
 }
 
 // Обновление таймера
@@ -187,6 +188,22 @@ function updateScore() {
   scoreElement.textContent = `Очки: ${score}`;
 }
 
+// Генерация начальных 5 пар слов
+function generateInitialPairs() {
+  activePairs = [];
+  for (let i = 0; i < 5; i++) {
+    addNewPair();
+  }
+  renderWords();
+}
+
+// Добавление новой пары слов
+function addNewPair() {
+  const randomIndex = Math.floor(Math.random() * availableWords.length);
+  const newPair = availableWords.splice(randomIndex, 1)[0];
+  activePairs.push(newPair);
+}
+
 // Рендеринг слов
 function renderWords() {
   const russianWordsColumn = document.getElementById('russianWordsColumn');
@@ -195,19 +212,11 @@ function renderWords() {
   russianWordsColumn.innerHTML = '';
   englishWordsColumn.innerHTML = '';
   
-  // Выбираем случайные 5 пар слов из доступных
-  const selectedPairs = [];
-  while (selectedPairs.length < 5 && availableWords.length > 0) {
-    const randomIndex = Math.floor(Math.random() * availableWords.length);
-    selectedPairs.push(availableWords[randomIndex]);
-  }
-
   // Перемешиваем английские слова для случайного порядка
-  const shuffledEnglishWords = selectedPairs.map(pair => pair.english);
+  const shuffledEnglishWords = activePairs.map(pair => pair.english);
   shuffleArray(shuffledEnglishWords);
   
-  // Отображаем слова в столбцах с анимацией появления
-  selectedPairs.forEach((pair, i) => {
+  activePairs.forEach((pair, i) => {
     const rusBox = document.createElement('div');
     const engBox = document.createElement('div');
     
@@ -235,30 +244,36 @@ function selectRussianWord(word, element) {
 
 // Проверка совпадения
 function checkMatch(russianWord, englishWord, element) {
+  if (!selectedRussianWord) return; // Проверка, что выбрано русское слово
+  
   const index = russianWords.indexOf(russianWord);
   const correctEnglish = englishWords[index];
   
-  if (selectedRussianWord && englishWord === correctEnglish) {
+  if (selectedRussianWord.word === russianWord && englishWord === correctEnglish) {
     element.classList.add('correct');
     selectedRussianWord.element.classList.add('correct');
     score += ++streak;
     updateScore();
-
-    // Удаление угаданных слов из списка доступных и добавление новой пары
+    
+    // Удаляем угаданную пару и добавляем новую, если есть доступные слова
     setTimeout(() => {
-      const rusEl = selectedRussianWord.element;
-      resetPair(element, rusEl);
-      availableWords = availableWords.filter(pair => pair.russian !== russianWord);
-      renderWords(); // Обновляем пары слов после правильного ответа
+      removePair(russianWord);
+      if (availableWords.length > 0) addNewPair();
+      renderWords();
     }, 500);
   } else {
     element.classList.add('wrong');
-    if (selectedRussianWord) selectedRussianWord.element.classList.add('wrong');
+    selectedRussianWord.element.classList.add('wrong');
     streak = 0;
     score = Math.max(0, score - 1);
     updateScore();
     setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
   }
+}
+
+// Удаление пары из активных слов
+function removePair(russianWord) {
+  activePairs = activePairs.filter(pair => pair.russian !== russianWord);
 }
 
 // Сброс выделения и цвета
