@@ -342,9 +342,9 @@ function updateScore() {
 // Генерация начальных 5 пар слов
 function generateInitialPairs() {
   activePairs = [];
-  // Случайным образом выбираем 5 пар слов из доступных
   const randomPairs = getRandomPairs(5);
-  renderWords(randomPairs);
+  activePairs.push(...randomPairs);
+  renderWords(activePairs);
 }
 
 // Функция для выбора случайных пар
@@ -366,7 +366,6 @@ function renderWords(pairs) {
   russianWordsColumn.innerHTML = '';
   englishWordsColumn.innerHTML = '';
   
-  // Перемешиваем английские слова
   const shuffledEnglishWords = pairs.map(pair => pair.english);
   shuffleArray(shuffledEnglishWords);
   
@@ -380,9 +379,8 @@ function renderWords(pairs) {
     rusBox.innerText = pair.russian;
     engBox.innerText = shuffledEnglishWords[i];
     
-    // Добавляем обработчики клика
-    rusBox.onclick = () => selectRussianWord(pair.russian, rusBox);
-    engBox.onclick = () => checkMatch(pair.russian, engBox.innerText, engBox);
+    rusBox.onclick = () => selectRussianWord(pair, rusBox);
+    engBox.onclick = () => checkMatch(pair, shuffledEnglishWords[i], engBox);
     
     russianWordsColumn.appendChild(rusBox);
     englishWordsColumn.appendChild(engBox);
@@ -390,32 +388,27 @@ function renderWords(pairs) {
 }
 
 // Функция выбора русского слова
-function selectRussianWord(word, element) {
+function selectRussianWord(pair, element) {
   if (selectedRussianWord) selectedRussianWord.element.classList.remove('selected');
-  selectedRussianWord = { word, element };
+  selectedRussianWord = { pair, element };
   element.classList.add('selected');
 }
 
 // Проверка совпадения
-function checkMatch(russianWord, englishWord, element) {
-  if (!selectedRussianWord) return; // Проверка, что выбрано русское слово
+function checkMatch(pair, selectedEnglish, element) {
+  if (!selectedRussianWord) return;
   
-  const index = russianWords.indexOf(russianWord);
-  const correctEnglish = englishWords[index];
+  const correctEnglish = pair.english;
   
-  if (selectedRussianWord.word === russianWord && englishWord === correctEnglish) {
+  if (selectedRussianWord.pair === pair && selectedEnglish === correctEnglish) {
     element.classList.add('correct');
     selectedRussianWord.element.classList.add('correct');
     score += ++streak;
     updateScore();
     
-    // Удаляем угаданную пару и добавляем новую
     setTimeout(() => {
-      removePair(russianWord);
-      if (availablePairs.length > 0) {
-        addNewPair();
-        renderWords(activePairs);
-      }
+      replaceMatchedPair(pair);
+      renderWords(activePairs);
     }, 500);
   } else {
     element.classList.add('wrong');
@@ -427,17 +420,15 @@ function checkMatch(russianWord, englishWord, element) {
   }
 }
 
-// Удаление пары из активных слов
-function removePair(russianWord) {
-  activePairs = activePairs.filter(pair => pair.russian !== russianWord);
-}
-
-// Добавление новой пары
-function addNewPair() {
-  if (availablePairs.length === 0) return;
-  const randomIndex = Math.floor(Math.random() * availablePairs.length);
-  const newPair = availablePairs.splice(randomIndex, 1)[0];
-  activePairs.push(newPair);
+// Удаление и замена пары
+function replaceMatchedPair(matchedPair) {
+  const index = activePairs.findIndex(pair => pair === matchedPair);
+  if (index !== -1) activePairs.splice(index, 1);
+  if (availablePairs.length > 0) {
+    const newPair = availablePairs.splice(Math.floor(Math.random() * availablePairs.length), 1)[0];
+    activePairs.push(newPair);
+  }
+  selectedRussianWord = null;
 }
 
 // Сброс выделения и цвета
