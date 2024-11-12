@@ -80,13 +80,12 @@
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    opacity: 0;
-    transform: scale(0.8);
+    opacity: 1;
+    transform: scale(1);
     border-radius: 8px; /* Сглаженные углы */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   }
 
-  .box.show { opacity: 1; transform: scale(1); }
   .selected { background-color: #dcdcdc; }
   .correct { background-color: green; transform: scale(1.1); }
   .wrong { background-color: red; transform: scale(1.1); }
@@ -116,11 +115,8 @@
   <div class="column" id="englishWordsColumn"></div>
 </div>
 
-<audio id="correctSound" src="correct.mp3"></audio>
-<audio id="wrongSound" src="wrong.mp3"></audio>
-
 <script>
-// Массив слов
+
 const wordPairs = [
   { russian: "яблоко", english: "apple" },
   { russian: "дом", english: "house" },
@@ -281,12 +277,12 @@ let timerInterval;
 let availablePairs = [...wordPairs];
 let activePairs = [];
 
+// DOM-элементы
 const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
 const startButton = document.getElementById('startButton');
-const correctSound = document.getElementById('correctSound');
-const wrongSound = document.getElementById('wrongSound');
 
+// Начало игры
 function startGame() {
   score = 0;
   streak = 0;
@@ -301,6 +297,7 @@ function startGame() {
   generateInitialPairs();
 }
 
+// Обновление таймера
 function startTimer() {
   clearInterval(timerInterval);
   timerInterval = setInterval(() => {
@@ -314,10 +311,12 @@ function startTimer() {
   }, 1000);
 }
 
+// Обновление счета
 function updateScore() {
   scoreElement.textContent = `Очки: ${score}`;
 }
 
+// Генерация начальных 5 пар слов
 function generateInitialPairs() {
   activePairs = [];
   const randomPairs = getRandomPairs(5);
@@ -325,6 +324,7 @@ function generateInitialPairs() {
   renderWords(activePairs);
 }
 
+// Функция для выбора случайных пар
 function getRandomPairs(count) {
   let selected = [];
   for (let i = 0; i < count; i++) {
@@ -335,6 +335,7 @@ function getRandomPairs(count) {
   return selected;
 }
 
+// Рендеринг слов
 function renderWords(pairs) {
   const russianWordsColumn = document.getElementById('russianWordsColumn');
   const englishWordsColumn = document.getElementById('englishWordsColumn');
@@ -363,12 +364,14 @@ function renderWords(pairs) {
   });
 }
 
+// Функция выбора русского слова
 function selectRussianWord(pair, element) {
   if (selectedRussianWord) selectedRussianWord.element.classList.remove('selected');
   selectedRussianWord = { pair, element };
   element.classList.add('selected');
 }
 
+// Проверка совпадения
 function checkMatch(pair, selectedEnglish, element) {
   if (!selectedRussianWord) return;
   
@@ -377,7 +380,6 @@ function checkMatch(pair, selectedEnglish, element) {
   if (selectedRussianWord.pair.english === selectedEnglish) {
     element.classList.add('correct');
     selectedRussianWord.element.classList.add('correct');
-    correctSound.play();
     score += ++streak;
     updateScore();
     
@@ -388,7 +390,6 @@ function checkMatch(pair, selectedEnglish, element) {
   } else {
     element.classList.add('wrong');
     selectedRussianWord.element.classList.add('wrong');
-    wrongSound.play();
     streak = 0;
     score = Math.max(0, score - 1);
     updateScore();
@@ -396,6 +397,7 @@ function checkMatch(pair, selectedEnglish, element) {
   }
 }
 
+// Удаление и замена пары
 function replaceMatchedPair(matchedPair) {
   const index = activePairs.findIndex(pair => pair === matchedPair);
   if (index !== -1) activePairs.splice(index, 1);
@@ -406,12 +408,14 @@ function replaceMatchedPair(matchedPair) {
   selectedRussianWord = null;
 }
 
+// Сброс выделения и цвета
 function resetPair(element1, element2) {
   element1.classList.remove('correct', 'wrong', 'selected');
   element2.classList.remove('correct', 'wrong', 'selected');
   selectedRussianWord = null;
 }
 
+// Перемешивание массива
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -419,10 +423,32 @@ function shuffleArray(array) {
   }
 }
 
+// Конец игры
 function endGame() {
-  alert(`Игра окончена! Ваш результат: ${score} очков`);
-  startButton.disabled = false;
+  clearInterval(timerInterval);
+  const playAgain = confirm(`Игра окончена! Набранные очки: ${score}\nХотите сыграть снова?`);
+  if (playAgain) {
+    startGame();
+  } else {
+    resetGame();
+  }
 }
+
+// Сброс игры
+function resetGame() {
+  score = 0;
+  timeLeft = 60;
+  timerElement.textContent = timeLeft;
+  timerElement.classList.remove('critical');
+  startButton.disabled = false;
+  scoreElement.textContent = 'Очки: 0';
+  document.getElementById('russianWordsColumn').innerHTML = '';
+  document.getElementById('englishWordsColumn').innerHTML = '';
+}
+
+// Событие для кнопки начать
+startButton.addEventListener('click', startGame);
 </script>
+
 </body>
 </html>
