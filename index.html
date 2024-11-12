@@ -1,122 +1,162 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Игра с угадыванием слов</title>
-<style>
-  body {
-    background-color: #87CEEB;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    text-align: center;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Игра с угадыванием слов</title>
+  <style>
+    body {
+      background-color: #87CEEB;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* Облака в стиле пиксельной игры */
-  .clouds {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-  }
+    /* Облака в стиле пиксельной игры */
+    .clouds {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
 
-  .cloud {
-    position: absolute;
-    width: 48px;
-    height: 24px;
-    background: #FFFFFF;
-    opacity: 0.8;
-    border-radius: 4px;
-    animation: float 10s linear infinite;
-  }
+    /* Пиксельные облака с помощью CSS */
+    .cloud {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+      opacity: 0.9;
+      animation: float 20s linear infinite;
+    }
 
-  .cloud:nth-child(1) { left: 0%; top: 20%; animation-delay: 0s; }
-  .cloud:nth-child(2) { left: 25%; top: 40%; animation-delay: 3s; }
-  .cloud:nth-child(3) { left: 50%; top: 60%; animation-delay: 5s; }
-  .cloud:nth-child(4) { left: 75%; top: 80%; animation-delay: 7s; }
-  .cloud:nth-child(5) { left: 100%; top: 30%; animation-delay: 10s; }
+    /* Стиль для нескольких облаков */
+    .cloud:nth-child(1) { 
+      width: 60px; 
+      height: 30px; 
+      top: 10%; 
+      left: -60px;
+      animation-duration: 20s;
+      animation-delay: 0s;
+    }
 
-  @keyframes float {
-    0% { transform: translateX(-50px); }
-    100% { transform: translateX(100vw); }
-  }
+    .cloud:nth-child(2) { 
+      width: 90px; 
+      height: 40px; 
+      top: 15%; 
+      left: -100px;
+      animation-duration: 22s;
+      animation-delay: 3s;
+    }
 
-  /* Аниме стиль */
-  .header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-  }
+    .cloud:nth-child(3) { 
+      width: 70px; 
+      height: 35px; 
+      top: 25%; 
+      left: -120px;
+      animation-duration: 18s;
+      animation-delay: 6s;
+    }
 
-  .timer, .score {
-    font-size: 28px;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    color: #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  }
+    .cloud:nth-child(4) { 
+      width: 80px; 
+      height: 40px; 
+      top: 35%; 
+      left: -80px;
+      animation-duration: 25s;
+      animation-delay: 9s;
+    }
 
-  .game-board {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-  }
+    .cloud:nth-child(5) { 
+      width: 100px; 
+      height: 50px; 
+      top: 45%; 
+      left: -50px;
+      animation-duration: 30s;
+      animation-delay: 12s;
+    }
 
-  .column {
-    display: flex;
-    flex-direction: column;
-    margin: 0 20px;
-  }
+    @keyframes float {
+      0% { transform: translateX(-100px); }
+      100% { transform: translateX(100vw); }
+    }
 
-  .box {
-    width: 120px;
-    height: 50px;
-    margin: 10px;
-    background-color: white;
-    color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    opacity: 1;
-    transform: scale(1);
-    border-radius: 8px; /* Сглаженные углы */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    font-size: 20px;
-  }
+    /* Аниме стиль */
+    .header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
 
-  .selected { background-color: #dcdcdc; }
-  .correct { background-color: green; transform: scale(1.1); }
-  .wrong { background-color: red; transform: scale(1.1); }
-  .timer.critical { color: red; animation: blink 1s step-start infinite; }
+    .timer, .score {
+      font-size: 28px;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
 
-  @keyframes blink { 50% { opacity: 0; } }
+    .game-board {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+    }
 
-  #startButton {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+    .column {
+      display: flex;
+      flex-direction: column;
+      margin: 0 20px;
+    }
 
-  #startButton:hover {
-    background-color: #45a049;
-  }
-  
-</style>
+    .box {
+      width: 120px;
+      height: 50px;
+      margin: 10px;
+      background-color: white;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      opacity: 1;
+      transform: scale(1);
+      border-radius: 8px; /* Сглаженные углы */
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      font-size: 20px;
+    }
+
+    .selected { background-color: #dcdcdc; }
+    .correct { background-color: green; transform: scale(1.1); }
+    .wrong { background-color: red; transform: scale(1.1); }
+    .timer.critical { color: red; animation: blink 1s step-start infinite; }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    #startButton {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #startButton:hover {
+      background-color: #45a049;
+    }
+
+  </style>
 </head>
 <body>
 
