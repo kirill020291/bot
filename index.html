@@ -155,7 +155,6 @@ function startGame() {
   score = 0;
   streak = 0;
   timeLeft = 60;
-  shuffleArray(russianWords);
   updateScore();
   startTimer();
   renderWords();
@@ -187,24 +186,31 @@ function renderWords() {
   russianWordsColumn.innerHTML = '';
   englishWordsColumn.innerHTML = '';
   
-  // Выбор 5 случайных пар для отображения
-  for (let i = 0; i < 5; i++) {
-    const engBox = document.createElement('div');
+  // Копируем массивы слов и перемешиваем английские слова
+  const wordsPair = russianWords.map((word, index) => ({ russian: word, english: englishWords[index] }));
+  shuffleArray(wordsPair);
+  
+  const shuffledEnglishWords = wordsPair.map(pair => pair.english);
+  shuffleArray(shuffledEnglishWords);
+  
+  // Отображаем слова в столбцах
+  wordsPair.forEach((pair, i) => {
     const rusBox = document.createElement('div');
+    const engBox = document.createElement('div');
     
-    engBox.classList.add('box');
     rusBox.classList.add('box');
+    engBox.classList.add('box');
     
-    engBox.innerText = englishWords[i];
-    rusBox.innerText = russianWords[i];
+    rusBox.innerText = pair.russian;
+    engBox.innerText = shuffledEnglishWords[i];
     
     // Добавляем обработчики нажатий
-    rusBox.onclick = () => selectRussianWord(russianWords[i], rusBox);
-    engBox.onclick = () => checkMatch(englishWords[i], engBox);
+    rusBox.onclick = () => selectRussianWord(pair.russian, rusBox);
+    engBox.onclick = () => checkMatch(pair.russian, engBox.innerText, engBox);
     
     russianWordsColumn.appendChild(rusBox);
     englishWordsColumn.appendChild(engBox);
-  }
+  });
 }
 
 // Выбор русского слова
@@ -213,8 +219,11 @@ function selectRussianWord(word, element) {
 }
 
 // Проверка совпадения
-function checkMatch(word, element) {
-  if (selectedRussianWord && word === selectedRussianWord.word) {
+function checkMatch(russianWord, englishWord, element) {
+  const index = russianWords.indexOf(russianWord);
+  const correctEnglish = englishWords[index];
+  
+  if (selectedRussianWord && englishWord === correctEnglish) {
     element.classList.add('correct');
     selectedRussianWord.element.classList.add('correct');
     score += ++streak;
@@ -255,4 +264,3 @@ startGame();
 
 </body>
 </html>
-
