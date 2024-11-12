@@ -1,96 +1,257 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Игра: Угадай Перевод</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .timer, .score { font-size: 1.5em; }
-        .word { font-size: 2em; margin: 20px; }
-        input { font-size: 1em; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Игра с угадыванием слов</title>
+<style>
+  body { background-color: #87CEEB; font-family: Arial, sans-serif; }
+  .game-board { display: flex; justify-content: center; align-items: center; margin-top: 20px; }
+  .column { display: flex; flex-direction: column; }
+  .box { width: 100px; height: 50px; margin: 10px; background-color: white; color: black; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background-color 0.3s ease; }
+  .correct { background-color: green; }
+  .wrong { background-color: red; }
+  .timer { color: black; font-size: 24px; }
+  .timer.critical { color: red; animation: blink 1s step-start infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
 </head>
 <body>
-    <h1>Угадай перевод</h1>
-    <div class="timer">Время: <span id="timer">120</span> сек</div>
-    <div class="score">Очки: <span id="score">0</span></div>
-    <div class="word" id="word"></div>
-    <input type="text" id="answer" placeholder="Введите перевод">
-    <button onclick="checkAnswer()">Проверить</button>
 
-    <script>
-        let words = {
-    "apple": "яблоко",
-    "cat": "кот",
-    "dog": "собака",
-    "house": "дом",
-    "sun": "солнце",
-    "car": "машина",
-    "book": "книга",
-    "water": "вода",
-    "fish": "рыба",
-    "tree": "дерево",
-    "bird": "птица",
-    "flower": "цветок",
-    "milk": "молоко",
-    "river": "река",
-    "rain": "дождь",
-    "snow": "снег",
-    "wind": "ветер",
-    "bread": "хлеб",
-    "fire": "огонь",
-    "school": "школа",
-    "city": "город",
-    "table": "стол",
-    "pen": "ручка",
-    "window": "окно",
-    "door": "дверь",
-    "sky": "небо",
-    "beach": "пляж",
-    "tree": "дерево",
-    "forest": "лес",
-    "road": "дорога",
-}; // пример словаря
-        let score = 0;
-        let time = 120;
-        let currentWord = "";
+<div class="timer" id="timer">60</div>
+<div class="game-board" id="gameBoard">
+  <div class="column" id="russianWordsColumn"></div>
+  <div class="column" id="englishWordsColumn"></div>
+</div>
+<div id="score">Очки: 0</div>
 
-        function startGame() {
-            currentWord = getRandomWord();
-            document.getElementById('word').innerText = currentWord;
-            setInterval(countdown, 1000);
-        }
+<script>
+// Массивы слов (только для примера, можно заменить на массив из 1000 слов)
+const englishWords = [
+    "apple", "house", "car", "computer", "sun", "table", "dog", "cat", "book", "water",
+    "tree", "phone", "food", "city", "school", "window", "door", "pen", "road", "flower",
+    "river", "cloud", "star", "light", "girl", "boy", "day", "night", "music", "world",
+    "friend", "family", "baby", "animal", "fish", "bird", "mountain", "forest", "ocean",
+    "lake", "river", "beach", "sand", "salt", "sugar", "tea", "coffee", "milk", "bread",
+    "cheese", "butter", "egg", "chicken", "meat", "rice", "pasta", "salad", "fruit",
+    "vegetable", "orange", "lemon", "banana", "grape", "apple", "pear", "peach", "plum",
+    "potato", "carrot", "onion", "tomato", "cucumber", "pepper", "lettuce", "spinach",
+    "cabbage", "garlic", "ginger", "apple", "tree", "leaf", "flower", "seed", "grass",
+    "stone", "rock", "earth", "soil", "field", "forest", "jungle", "desert", "rain",
+    "snow", "ice", "fire", "smoke", "air", "wind", "storm", "sky", "cloud", "sun",
+    "moon", "star", "planet", "space", "universe", "galaxy", "ocean", "lake", "river",
+    "sea", "beach", "sand", "wave", "boat", "ship", "island", "peninsula", "coast",
+    "mountain", "hill", "valley", "cave", "forest", "jungle", "desert", "plain", "field",
+    "road", "street", "bridge", "tunnel", "car", "truck", "bus", "train", "bicycle",
+    "motorcycle", "airplane", "helicopter", "ship", "boat", "submarine", "rocket",
+    "satellite", "spaceship", "astronaut", "pilot", "sailor", "captain", "driver",
+    "teacher", "doctor", "nurse", "scientist", "engineer", "artist", "writer", "poet",
+    "musician", "singer", "dancer", "actor", "director", "painter", "sculptor", "chef",
+    "cook", "baker", "farmer", "gardener", "mechanic", "electrician", "plumber",
+    "builder", "carpenter", "blacksmith", "tailor", "barber", "hairdresser", "nail",
+    "hand", "finger", "leg", "foot", "eye", "ear", "nose", "mouth", "lip", "tooth",
+    "hair", "head", "face", "neck", "shoulder", "arm", "elbow", "wrist", "hand", "back",
+    "stomach", "chest", "heart", "lung", "liver", "kidney", "brain", "bone", "muscle",
+    "skin", "blood", "nerve", "finger", "toe", "nail", "skeleton", "medicine", "hospital",
+    "pharmacy", "clinic", "doctor", "nurse", "patient", "illness", "disease", "fever",
+    "cough", "cold", "flu", "headache", "stomachache", "toothache", "sore", "pain",
+    "wound", "injury", "cut", "bruise", "burn", "fracture", "sprain", "infection", "virus",
+    "bacteria", "germ", "antibiotic", "vaccine", "syringe", "needle", "pill", "tablet",
+    "capsule", "ointment", "cream", "bandage", "plaster", "therapy", "treatment", "cure",
+    "operation", "surgery", "scan", "x-ray", "blood test", "ultrasound", "medicine",
+    "psychologist", "psychiatrist", "dentist", "optician", "ophthalmologist", "surgeon",
+    "chemist", "scientist", "researcher", "engineer", "technician", "teacher", "lecturer",
+    "professor", "trainer", "coach", "instructor", "advisor", "consultant", "mentor",
+    "counselor", "therapist", "psychologist", "social worker", "librarian", "writer",
+    "journalist", "reporter", "editor", "translator", "interpreter", "artist", "painter",
+    "sculptor", "photographer", "musician", "singer", "dancer", "actor", "director",
+    "producer", "chef", "cook", "baker", "gardener", "farmer", "builder", "carpenter",
+    "tailor", "barber", "hairdresser", "mechanic", "electrician", "plumber", "driver",
+    "sailor", "pilot", "astronaut", "scientist", "mathematician", "physicist", "chemist",
+    "biologist", "geologist", "meteorologist", "astronomer", "historian", "philosopher",
+    "archaeologist", "linguist", "translator", "interpreter", "lawyer", "judge", "police",
+    "soldier", "firefighter", "guard", "security", "detective", "spy", "pilot", "navigator",
+    "operator", "engineer", "technician", "mechanic", "chemist", "scientist", "researcher",
+    "doctor", "nurse", "pharmacist", "dentist", "veterinarian", "surgeon", "therapist",
+    "psychologist", "psychiatrist", "teacher", "professor", "lecturer", "instructor", "coach",
+    "trainer", "advisor", "consultant", "mentor", "counselor", "social worker", "librarian",
+    "journalist", "reporter", "editor", "translator", "photographer", "artist", "writer",
+    "musician", "singer", "dancer", "actor", "director", "producer", "comedian", "magician",
+    "chef", "cook", "baker", "butcher", "gardener", "farmer", "builder", "carpenter",
+    "plumber", "electrician", "mechanic", "technician", "scientist", "engineer", "architect",
+    "mathematician", "physicist", "biologist", "chemist", "geologist", "astronomer",
+    "historian", "philosopher", "sociologist", "psychologist", "anthropologist",
+    "linguist", "translator", "interpreter"
+];
 
-        function getRandomWord() {
-            const keys = Object.keys(words);
-            return keys[Math.floor(Math.random() * keys.length)];
-        }
+const russianWords = [
+    "яблоко", "дом", "машина", "компьютер", "солнце", "стол", "собака", "кот", "книга", "вода",
+    "дерево", "телефон", "еда", "город", "школа", "окно", "дверь", "ручка", "дорога", "цветок",
+    "река", "облако", "звезда", "свет", "девочка", "мальчик", "день", "ночь", "музыка", "мир",
+    "друг", "семья", "малыш", "животное", "рыба", "птица", "гора", "лес", "океан", "озеро",
+    "река", "пляж", "песок", "соль", "сахар", "чай", "кофе", "молоко", "хлеб", "сыр", "масло",
+    "яйцо", "курица", "мясо", "рис", "макароны", "салат", "фрукты", "овощ", "апельсин", "лимон",
+    "банан", "виноград", "яблоко", "груша", "персик", "слива", "картофель", "морковь", "лук",
+    "помидор", "огурец", "перец", "салат", "шпинат", "капуста", "чеснок", "имбирь", "дерево",
+    "лист", "цветок", "семя", "трава", "камень", "скала", "земля", "почва", "поле", "лес",
+    "джунгли", "пустыня", "дождь", "снег", "лед", "огонь", "дым", "воздух", "ветер", "буря",
+    "небо", "облако", "солнце", "луна", "звезда", "планета", "космос", "вселенная", "галактика",
+    "океан", "озеро", "река", "море", "пляж", "песок", "волна", "лодка", "корабль", "остров",
+    "полуостров", "берег", "гора", "холм", "долина", "пещера", "лес", "джунгли", "пустыня",
+    "равнина", "поле", "дорога", "улица", "мост", "туннель", "машина", "грузовик", "автобус",
+    "поезд", "велосипед", "мотоцикл", "самолет", "вертолет", "корабль", "лодка", "подводная лодка",
+    "ракета", "спутник", "космический корабль", "астронавт", "пилот", "моряк", "капитан", "водитель",
+    "учитель", "врач", "медсестра", "ученый", "инженер", "художник", "писатель", "поэт", "музыкант",
+    "певец", "танцор", "актер", "режиссер", "художник", "скульптор", "шеф-повар", "повар", "пекарь",
+    "фермер", "садовник", "механик", "электрик", "сантехник", "строитель", "плотник", "кузнец", 
+    "портной", "парикмахер", "маникюр", "рука", "палец", "нога", "ступня", "глаз", "ухо", "нос",
+    "рот", "губа", "зуб", "волос", "голова", "лицо", "шея", "плечо", "рука", "локоть", "запястье",
+    "ладонь", "спина", "живот", "грудь", "сердце", "легкое", "печень", "почка", "мозг", "кость",
+    "мышца", "кожа", "кровь", "нерв", "палец", "палец ноги", "ноготь", "скелет", "лекарство",
+    "больница", "аптека", "клиника", "доктор", "медсестра", "пациент", "болезнь", "лихорадка",
+    "кашель", "простуда", "грипп", "головная боль", "боль в животе", "зубная боль", "рана",
+    "боль", "рана", "травма", "порез", "синяк", "ожог", "перелом", "растяжение", "инфекция",
+    "вирус", "бактерия", "микроб", "антибиотик", "вакцина", "шприц", "игла", "таблетка",
+    "крем", "мазь", "бинт", "пластырь", "терапия", "лечение", "лечение", "операция", "сканирование",
+    "рентген", "анализ крови", "УЗИ", "медикамент", "психолог", "психиатр", "стоматолог", 
+    "оптик", "офтальмолог", "хирург", "химик", "ученый", "исследователь", "инженер", "техник",
+    "учитель", "лектор", "профессор", "тренер", "инструктор", "советник", "консультант", 
+    "наставник", "консультант", "социальный работник", "библиотекарь", "писатель", "журналист",
+    "репортер", "редактор", "переводчик", "фотограф", "художник", "писатель", "музыкант",
+    "певец", "танцор", "актер", "режиссер", "продюсер", "комик", "волшебник", "шеф", "повар",
+    "пекарь", "мясник", "садовник", "фермер", "строитель", "плотник", "сантехник", "электрик",
+    "механик", "техник", "ученый", "инженер", "архитектор", "математик", "физик", "биолог",
+    "химик", "геолог", "астроном", "историк", "философ", "социолог", "психолог", "антрополог",
+    "лингвист", "переводчик", "юрист", "судья", "полицейский", "солдат", "пожарный", "охранник",
+    "детектив", "шпион", "пилот", "навигатор", "оператор", "инженер", "техник", "механик", 
+    "химик", "ученый", "исследователь", "доктор", "медсестра", "фармацевт", "стоматолог", 
+    "ветеринар", "хирург", "терапевт", "психолог", "психиатр", "учитель", "профессор", "лектор", 
+    "инструктор", "тренер", "советник", "консультант", "наставник", "психолог", "социальный работник",
+    "библиотекарь", "журналист", "редактор", "переводчик", "фотограф", "художник", "писатель", "музыкант",
+    "певец", "танцор", "актер", "режиссер", "продюсер", "комик", "маг", "шеф", "повар", "пекарь", 
+    "мясник", "садовник", "фермер", "строитель", "плотник", "сантехник", "электрик", "механик", "техник", 
+    "ученый", "инженер", "архитектор", "математик", "физик", "биолог", "геолог", "астроном", "историк", 
+    "философ", "социолог", "психолог", "антрополог", "лингвист", "переводчик", "юрист", "судья", 
+    "полицейский", "солдат", "пожарный", "охранник", "детектив", "шпион", "пилот", "навигатор", "оператор"
+];
 
-        function countdown() {
-            if (time > 0) {
-                time--;
-                document.getElementById('timer').innerText = time;
-            } else {
-                alert("Время вышло! Ваш счет: " + score);
-                // Дополнительно: отправить счет в базу данных
-            }
-        }
+// Перемешивание русского списка
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 
-        function checkAnswer() {
-            let answer = document.getElementById('answer').value.toLowerCase();
-            if (answer === words[currentWord]) {
-                score++;
-                document.getElementById('score').innerText = score;
-                document.getElementById('answer').value = "";
-                currentWord = getRandomWord();
-                document.getElementById('word').innerText = currentWord;
-            } else {
-                alert("Неправильно! Попробуйте снова.");
-            }
-        }
+// Начальные переменные
+let score = 0;
+let streak = 0;
+let timeLeft = 60;
+let selectedRussianWord = null;
+const timerElement = document.getElementById('timer');
 
-        window.onload = startGame;
-    </script>
+// Начало игры
+function startGame() {
+  score = 0;
+  streak = 0;
+  timeLeft = 60;
+  shuffleArray(russianWords);
+  updateScore();
+  startTimer();
+  renderWords();
+}
+
+// Обновление счета
+function updateScore() {
+  document.getElementById('score').innerText = `Очки: ${score}`;
+}
+
+// Таймер
+function startTimer() {
+  const timerInterval = setInterval(() => {
+    timeLeft--;
+    timerElement.textContent = timeLeft;
+    if (timeLeft <= 15) timerElement.classList.add('critical');
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endGame();
+    }
+  }, 1000);
+}
+
+// Отрисовка слов
+function renderWords() {
+  const russianWordsColumn = document.getElementById('russianWordsColumn');
+  const englishWordsColumn = document.getElementById('englishWordsColumn');
+  
+  russianWordsColumn.innerHTML = '';
+  englishWordsColumn.innerHTML = '';
+  
+  // Выбор 5 случайных пар для отображения
+  for (let i = 0; i < 5; i++) {
+    const engBox = document.createElement('div');
+    const rusBox = document.createElement('div');
+    
+    engBox.classList.add('box');
+    rusBox.classList.add('box');
+    
+    engBox.innerText = englishWords[i];
+    rusBox.innerText = russianWords[i];
+    
+    // Добавляем обработчики нажатий
+    rusBox.onclick = () => selectRussianWord(russianWords[i], rusBox);
+    engBox.onclick = () => checkMatch(englishWords[i], engBox);
+    
+    russianWordsColumn.appendChild(rusBox);
+    englishWordsColumn.appendChild(engBox);
+  }
+}
+
+// Выбор русского слова
+function selectRussianWord(word, element) {
+  selectedRussianWord = { word, element };
+}
+
+// Проверка совпадения
+function checkMatch(word, element) {
+  if (selectedRussianWord && word === selectedRussianWord.word) {
+    element.classList.add('correct');
+    selectedRussianWord.element.classList.add('correct');
+    score += ++streak;
+    updateScore();
+    setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
+  } else {
+    element.classList.add('wrong');
+    if (selectedRussianWord) selectedRussianWord.element.classList.add('wrong');
+    streak = 0;
+    score = Math.max(0, score - 1);
+    updateScore();
+    setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
+  }
+}
+
+// Сброс цвета и замена слов
+function resetPair(element1, element2) {
+  element1.classList.remove('correct', 'wrong');
+  element2.classList.remove('correct', 'wrong');
+  renderWords(); // Обновляем слова на новые
+  selectedRussianWord = null;
+}
+
+// Конец игры
+function endGame() {
+  alert('Игра окончена! Набранные очки: ' + score);
+  const restart = confirm("Начать заново?");
+  if (restart) {
+    startGame();
+  } else {
+    // Здесь можно добавить логику выхода в меню
+  }
+}
+
+// Начало игры
+startGame();
+</script>
+
 </body>
 </html>
