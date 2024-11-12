@@ -3,25 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кликер Игра</title>
+    <title>Игра: Угадай Перевод</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        .game-button { font-size: 20px; padding: 10px 20px; cursor: pointer; }
-        .score { font-size: 24px; margin-top: 20px; }
+        .timer, .score { font-size: 1.5em; }
+        .word { font-size: 2em; margin: 20px; }
+        input { font-size: 1em; }
     </style>
 </head>
 <body>
-    <h1>Игра: Кликер</h1>
-    <button class="game-button" onclick="increaseScore()">Кликни меня!</button>
-    <p class="score">Очки: <span id="score">0</span></p>
+    <h1>Угадай перевод</h1>
+    <div class="timer">Время: <span id="timer">120</span> сек</div>
+    <div class="score">Очки: <span id="score">0</span></div>
+    <div class="word" id="word"></div>
+    <input type="text" id="answer" placeholder="Введите перевод">
+    <button onclick="checkAnswer()">Проверить</button>
 
     <script>
+        let words = {
+    "apple": "яблоко",
+    "cat": "кот",
+    "dog": "собака",
+    "house": "дом",
+    "sun": "солнце",
+    "car": "машина",
+    "book": "книга",
+    "water": "вода",
+    "fish": "рыба",
+    "tree": "дерево",
+    "bird": "птица",
+    "flower": "цветок",
+    "milk": "молоко",
+    "river": "река",
+    "rain": "дождь",
+    "snow": "снег",
+    "wind": "ветер",
+    "bread": "хлеб",
+    "fire": "огонь",
+    "school": "школа",
+    "city": "город",
+    "table": "стол",
+    "pen": "ручка",
+    "window": "окно",
+    "door": "дверь",
+    "sky": "небо",
+    "beach": "пляж",
+    "tree": "дерево",
+    "forest": "лес",
+    "road": "дорога",
+}; // пример словаря
         let score = 0;
+        let time = 120;
+        let currentWord = "";
 
-        function increaseScore() {
-            score++;
-            document.getElementById("score").textContent = score;
+        function startGame() {
+            currentWord = getRandomWord();
+            document.getElementById('word').innerText = currentWord;
+            setInterval(countdown, 1000);
         }
+
+        function getRandomWord() {
+            const keys = Object.keys(words);
+            return keys[Math.floor(Math.random() * keys.length)];
+        }
+
+        function countdown() {
+            if (time > 0) {
+                time--;
+                document.getElementById('timer').innerText = time;
+            } else {
+                alert("Время вышло! Ваш счет: " + score);
+                // Дополнительно: отправить счет в базу данных
+            }
+        }
+
+        function checkAnswer() {
+            let answer = document.getElementById('answer').value.toLowerCase();
+            if (answer === words[currentWord]) {
+                score++;
+                document.getElementById('score').innerText = score;
+                document.getElementById('answer').value = "";
+                currentWord = getRandomWord();
+                document.getElementById('word').innerText = currentWord;
+            } else {
+                alert("Неправильно! Попробуйте снова.");
+            }
+        }
+
+        window.onload = startGame;
     </script>
 </body>
-</html>      
+</html>
