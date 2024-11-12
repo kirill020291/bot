@@ -1,162 +1,98 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Игра с угадыванием слов</title>
-  <style>
-    body {
-      background-color: #87CEEB;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      text-align: center;
-      overflow: hidden;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Игра с угадыванием слов</title>
+<style>
+  body {
+    background-color: #87CEEB;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-align: center;
+    overflow: hidden;
+  }
 
-    /* Облака в стиле пиксельной игры */
-    .clouds {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-    }
+  /* Добавление облаков */
+  .clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
 
-    /* Пиксельные облака с помощью CSS */
-    .cloud {
-      position: absolute;
-      background-color: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-      opacity: 0.9;
-      animation: float 20s linear infinite;
-    }
+  .cloud {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    background: #FFFFFF;
+    opacity: 0.6;
+    border-radius: 100px;
+    animation: float 15s linear infinite;
+  }
 
-    /* Стиль для нескольких облаков */
-    .cloud:nth-child(1) { 
-      width: 60px; 
-      height: 30px; 
-      top: 10%; 
-      left: -60px;
-      animation-duration: 20s;
-      animation-delay: 0s;
-    }
+  .cloud:nth-child(1) { left: 0%; top: 20%; animation-delay: 0s; }
+  .cloud:nth-child(2) { left: 25%; top: 40%; animation-delay: 5s; }
+  .cloud:nth-child(3) { left: 50%; top: 60%; animation-delay: 2s; }
+  .cloud:nth-child(4) { left: 75%; top: 80%; animation-delay: 8s; }
+  .cloud:nth-child(5) { left: 100%; top: 30%; animation-delay: 10s; }
 
-    .cloud:nth-child(2) { 
-      width: 90px; 
-      height: 40px; 
-      top: 15%; 
-      left: -100px;
-      animation-duration: 22s;
-      animation-delay: 3s;
-    }
+  @keyframes float {
+    0% { transform: translateX(-200px); }
+    100% { transform: translateX(100vw); }
+  }
 
-    .cloud:nth-child(3) { 
-      width: 70px; 
-      height: 35px; 
-      top: 25%; 
-      left: -120px;
-      animation-duration: 18s;
-      animation-delay: 6s;
-    }
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 20px;
+  }
 
-    .cloud:nth-child(4) { 
-      width: 80px; 
-      height: 40px; 
-      top: 35%; 
-      left: -80px;
-      animation-duration: 25s;
-      animation-delay: 9s;
-    }
+  .timer, .score {
+    font-size: 24px;
+  }
 
-    .cloud:nth-child(5) { 
-      width: 100px; 
-      height: 50px; 
-      top: 45%; 
-      left: -50px;
-      animation-duration: 30s;
-      animation-delay: 12s;
-    }
+  .game-board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
 
-    @keyframes float {
-      0% { transform: translateX(-100px); }
-      100% { transform: translateX(100vw); }
-    }
+  .column {
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px;
+  }
 
-    /* Аниме стиль */
-    .header {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
+  .box {
+    width: 120px;
+    height: 50px;
+    margin: 10px;
+    background-color: white;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
+    border-radius: 8px; /* Сглаженные углы */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
 
-    .timer, .score {
-      font-size: 28px;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      color: #fff;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
+  .selected { background-color: #dcdcdc; }
+  .correct { background-color: green; transform: scale(1.1); }
+  .wrong { background-color: red; transform: scale(1.1); }
+  .timer.critical { color: red; animation: blink 1s step-start infinite; }
 
-    .game-board {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 30px;
-    }
-
-    .column {
-      display: flex;
-      flex-direction: column;
-      margin: 0 20px;
-    }
-
-    .box {
-      width: 120px;
-      height: 50px;
-      margin: 10px;
-      background-color: white;
-      color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      opacity: 1;
-      transform: scale(1);
-      border-radius: 8px; /* Сглаженные углы */
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      font-size: 20px;
-    }
-
-    .selected { background-color: #dcdcdc; }
-    .correct { background-color: green; transform: scale(1.1); }
-    .wrong { background-color: red; transform: scale(1.1); }
-    .timer.critical { color: red; animation: blink 1s step-start infinite; }
-
-    @keyframes blink { 50% { opacity: 0; } }
-
-    #startButton {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    #startButton:hover {
-      background-color: #45a049;
-    }
-
-  </style>
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
 </head>
 <body>
 
@@ -336,15 +272,17 @@ const wordPairs = [
 let score = 0;
 let streak = 0;
 let timeLeft = 60;
-let activePairs = [];
 let selectedRussianWord = null;
-let timerElement = document.getElementById("timer");
-let scoreElement = document.getElementById("score");
-let startButton = document.getElementById("startButton");
-let russianWordsColumn = document.getElementById("russianWordsColumn");
-let englishWordsColumn = document.getElementById("englishWordsColumn");
+let timerInterval;
+let availablePairs = [...wordPairs];
+let activePairs = [];
 
-// Функция для старта игры
+// DOM-элементы
+const timerElement = document.getElementById('timer');
+const scoreElement = document.getElementById('score');
+const startButton = document.getElementById('startButton');
+
+// Начало игры
 function startGame() {
   score = 0;
   streak = 0;
@@ -357,126 +295,160 @@ function startGame() {
   startButton.disabled = true;
   startTimer();
   generateInitialPairs();
-  activateClouds(); // Добавляем активацию облаков
 }
 
-// Функция для отображения текущего счета
-function updateScore() {
-  scoreElement.textContent = `Очки: ${score}`;
-}
-
-// Функция для генерации пар слов
-function generateInitialPairs() {
-  const shuffledPairs = shuffle(wordPairs);
-  activePairs = shuffledPairs.slice(0, 4); // Восстанавливаем 4 пары слов
-  renderGameBoard();
-}
-
-// Функция для перемешивания массива
-function shuffle(array) {
-  let shuffledArray = array.slice();
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
-  return shuffledArray;
-}
-
-// Функция для отображения игрового поля
-function renderGameBoard() {
-  russianWordsColumn.innerHTML = '';
-  englishWordsColumn.innerHTML = '';
-
-  activePairs.forEach(pair => {
-    const russianBox = document.createElement("div");
-    russianBox.className = "box";
-    russianBox.textContent = pair.russian;
-    russianBox.addEventListener("click", () => selectRussianWord(pair));
-    russianWordsColumn.appendChild(russianBox);
-
-    const englishBox = document.createElement("div");
-    englishBox.className = "box";
-    englishBox.textContent = pair.english;
-    englishBox.addEventListener("click", () => checkAnswer(pair));
-    englishWordsColumn.appendChild(englishBox);
-  });
-}
-
-// Функция для выбора русского слова
-function selectRussianWord(pair) {
-  selectedRussianWord = pair;
-  highlightSelection();
-}
-
-// Функция для выделения выбранного русского слова
-function highlightSelection() {
-  const boxes = russianWordsColumn.querySelectorAll(".box");
-  boxes.forEach(box => {
-    if (box.textContent === selectedRussianWord.russian) {
-      box.classList.add("selected");
-    } else {
-      box.classList.remove("selected");
-    }
-  });
-}
-
-// Функция для проверки ответа
-function checkAnswer(pair) {
-  if (!selectedRussianWord) return;
-
-  if (selectedRussianWord.english === pair.english) {
-    // Правильный ответ
-    streak++;
-    score += streak;
-    renderGameBoard();
-  } else {
-    // Неправильный ответ
-    streak = 0;
-    score--;
-    renderGameBoard();
-  }
-  updateScore();
-  selectedRussianWord = null;
-  highlightSelection();
-}
-
-// Функция для отсчета времени
+// Обновление таймера
 function startTimer() {
-  const timerInterval = setInterval(() => {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
     timeLeft--;
     timerElement.textContent = timeLeft;
-
-    if (timeLeft <= 15) {
-      timerElement.classList.add("critical");
-    }
-
-    if (timeLeft === 0) {
+    if (timeLeft <= 15) timerElement.classList.add('critical');
+    if (timeLeft <= 0) {
       clearInterval(timerInterval);
       endGame();
     }
   }, 1000);
 }
 
-// Функция для окончания игры
-function endGame() {
-  alert(`Игра окончена! Ваш итоговый результат: ${score} очков.`);
-  startButton.disabled = false;
+// Обновление счета
+function updateScore() {
+  scoreElement.textContent = `Очки: ${score}`;
 }
 
-// Функция для активации случайных облаков
-function activateClouds() {
-  const clouds = document.querySelectorAll('.cloud');
-  clouds.forEach(cloud => {
-    // Позиционируем облака с случайными задержками и скоростью
-    const randomDelay = Math.random() * 10;
-    const randomSpeed = Math.random() * 10 + 15;
-    cloud.style.animationDuration = `${randomSpeed}s`; // Рандомная скорость
-    cloud.style.animationDelay = `${randomDelay}s`; // Рандомная задержка
+// Генерация начальных 5 пар слов
+function generateInitialPairs() {
+  activePairs = [];
+  const randomPairs = getRandomPairs(5);
+  activePairs.push(...randomPairs);
+  renderWords(activePairs);
+}
+
+// Функция для выбора случайных пар
+function getRandomPairs(count) {
+  let selected = [];
+  for (let i = 0; i < count; i++) {
+    const randomIndex = Math.floor(Math.random() * availablePairs.length);
+    selected.push(availablePairs[randomIndex]);
+    availablePairs.splice(randomIndex, 1);
+  }
+  return selected;
+}
+
+// Рендеринг слов
+function renderWords(pairs) {
+  const russianWordsColumn = document.getElementById('russianWordsColumn');
+  const englishWordsColumn = document.getElementById('englishWordsColumn');
+  
+  russianWordsColumn.innerHTML = '';
+  englishWordsColumn.innerHTML = '';
+  
+  const shuffledEnglishWords = pairs.map(pair => pair.english);
+  shuffleArray(shuffledEnglishWords);
+  
+  pairs.forEach((pair, i) => {
+    const rusBox = document.createElement('div');
+    const engBox = document.createElement('div');
+    
+    rusBox.classList.add('box', 'show');
+    engBox.classList.add('box', 'show');
+    
+    rusBox.innerText = pair.russian;
+    engBox.innerText = shuffledEnglishWords[i];
+    
+    rusBox.onclick = () => selectRussianWord(pair, rusBox);
+    engBox.onclick = () => checkMatch(pair, shuffledEnglishWords[i], engBox);
+    
+    russianWordsColumn.appendChild(rusBox);
+    englishWordsColumn.appendChild(engBox);
   });
 }
 
-startButton.addEventListener("click", startGame);
+// Функция выбора русского слова
+function selectRussianWord(pair, element) {
+  if (selectedRussianWord) selectedRussianWord.element.classList.remove('selected');
+  selectedRussianWord = { pair, element };
+  element.classList.add('selected');
+}
 
+// Проверка совпадения
+function checkMatch(pair, selectedEnglish, element) {
+  if (!selectedRussianWord) return;
+  
+  const correctEnglish = selectedRussianWord.pair.english;
+  
+  if (selectedRussianWord.pair.english === selectedEnglish) {
+    element.classList.add('correct');
+    selectedRussianWord.element.classList.add('correct');
+    score += ++streak;
+    updateScore();
+    
+    setTimeout(() => {
+      replaceMatchedPair(selectedRussianWord.pair);
+      renderWords(activePairs);
+    }, 500);
+  } else {
+    element.classList.add('wrong');
+    selectedRussianWord.element.classList.add('wrong');
+    streak = 0;
+    score = Math.max(0, score - 1);
+    updateScore();
+    setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
+  }
+}
+
+// Удаление и замена пары
+function replaceMatchedPair(matchedPair) {
+  const index = activePairs.findIndex(pair => pair === matchedPair);
+  if (index !== -1) activePairs.splice(index, 1);
+  if (availablePairs.length > 0) {
+    const newPair = availablePairs.splice(Math.floor(Math.random() * availablePairs.length), 1)[0];
+    activePairs.push(newPair);
+  }
+  selectedRussianWord = null;
+}
+
+// Сброс выделения и цвета
+function resetPair(element1, element2) {
+  element1.classList.remove('correct', 'wrong', 'selected');
+  element2.classList.remove('correct', 'wrong', 'selected');
+  selectedRussianWord = null;
+}
+
+// Перемешивание массива
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+// Конец игры
+function endGame() {
+  clearInterval(timerInterval);
+  const playAgain = confirm(`Игра окончена! Набранные очки: ${score}\nХотите сыграть снова?`);
+  if (playAgain) {
+    startGame();
+  } else {
+    resetGame();
+  }
+}
+
+// Сброс игры
+function resetGame() {
+  score = 0;
+  timeLeft = 60;
+  timerElement.textContent = timeLeft;
+  timerElement.classList.remove('critical');
+  startButton.disabled = false;
+  scoreElement.textContent = 'Очки: 0';
+  document.getElementById('russianWordsColumn').innerHTML = '';
+  document.getElementById('englishWordsColumn').innerHTML = '';
+}
+
+// Событие для кнопки начать
+startButton.addEventListener('click', startGame);
 </script>
+
 </body>
 </html>
