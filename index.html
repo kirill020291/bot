@@ -142,12 +142,17 @@ const russianWords = [
     "полицейский", "солдат", "пожарный", "охранник", "детектив", "шпион", "пилот", "навигатор", "оператор"
 ];
 
+
+// Полные списки слов (10 слов для примера)
+const englishWords = ["apple", "house", "car", "computer", "sun", "book", "cat", "dog", "tree", "sky"];
+const russianWords = ["яблоко", "дом", "машина", "компьютер", "солнце", "книга", "кот", "собака", "дерево", "небо"];
+
 let score = 0;
 let streak = 0;
 let timeLeft = 60;
 let selectedRussianWord = null;
 let timerInterval;
-let availableWords;
+let availablePairs;
 let activePairs;
 
 // DOM-элементы
@@ -160,7 +165,8 @@ function startGame() {
   score = 0;
   streak = 0;
   timeLeft = 60;
-  availableWords = englishWords.map((eng, i) => ({ english: eng, russian: russianWords[i] }));
+  availablePairs = englishWords.map((eng, i) => ({ english: eng, russian: russianWords[i] }));
+  activePairs = [];
   selectedRussianWord = null;
 
   updateScore();
@@ -199,10 +205,10 @@ function generateInitialPairs() {
 
 // Добавление новой пары слов
 function addNewPair() {
-  if (availableWords.length === 0) return;
+  if (availablePairs.length === 0) return;
 
-  const randomIndex = Math.floor(Math.random() * availableWords.length);
-  const newPair = availableWords.splice(randomIndex, 1)[0];
+  const randomIndex = Math.floor(Math.random() * availablePairs.length);
+  const newPair = availablePairs.splice(randomIndex, 1)[0];
   activePairs.push(newPair);
 }
 
@@ -214,7 +220,7 @@ function renderWords() {
   russianWordsColumn.innerHTML = '';
   englishWordsColumn.innerHTML = '';
   
-  // Перемешиваем английские слова для случайного порядка, но сохраняем пары
+  // Список английских слов, где порядок случайный, но парам соответствует их перевод
   const shuffledEnglishWords = activePairs.map(pair => pair.english);
   shuffleArray(shuffledEnglishWords);
   
@@ -260,7 +266,7 @@ function checkMatch(russianWord, englishWord, element) {
     // Удаляем угаданную пару и добавляем новую, если есть доступные слова
     setTimeout(() => {
       removePair(russianWord);
-      if (availableWords.length > 0) addNewPair();
+      if (availablePairs.length > 0) addNewPair();
       renderWords();
     }, 500);
   } else {
