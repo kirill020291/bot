@@ -142,13 +142,165 @@ const russianWords = [
     "полицейский", "солдат", "пожарный", "охранник", "детектив", "шпион", "пилот", "навигатор", "оператор"
 ];
 
+const wordPairs = [
+  { russian: "яблоко", english: "apple" },
+  { russian: "дом", english: "house" },
+  { russian: "машина", english: "car" },
+  { russian: "компьютер", english: "computer" },
+  { russian: "солнце", english: "sun" },
+  { russian: "стол", english: "table" },
+  { russian: "собака", english: "dog" },
+  { russian: "кот", english: "cat" },
+  { russian: "книга", english: "book" },
+  { russian: "вода", english: "water" },
+  { russian: "дерево", english: "tree" },
+  { russian: "телефон", english: "phone" },
+  { russian: "еда", english: "food" },
+  { russian: "город", english: "city" },
+  { russian: "школа", english: "school" },
+  { russian: "окно", english: "window" },
+  { russian: "дверь", english: "door" },
+  { russian: "ручка", english: "pen" },
+  { russian: "дорога", english: "road" },
+  { russian: "цветок", english: "flower" },
+  { russian: "река", english: "river" },
+  { russian: "облако", english: "cloud" },
+  { russian: "звезда", english: "star" },
+  { russian: "свет", english: "light" },
+  { russian: "девочка", english: "girl" },
+  { russian: "мальчик", english: "boy" },
+  { russian: "день", english: "day" },
+  { russian: "ночь", english: "night" },
+  { russian: "музыка", english: "music" },
+  { russian: "мир", english: "world" },
+  { russian: "друг", english: "friend" },
+  { russian: "семья", english: "family" },
+  { russian: "малыш", english: "baby" },
+  { russian: "животное", english: "animal" },
+  { russian: "рыба", english: "fish" },
+  { russian: "птица", english: "bird" },
+  { russian: "гора", english: "mountain" },
+  { russian: "лес", english: "forest" },
+  { russian: "океан", english: "ocean" },
+  { russian: "озеро", english: "lake" },
+  { russian: "пляж", english: "beach" },
+  { russian: "песок", english: "sand" },
+  { russian: "соль", english: "salt" },
+  { russian: "сахар", english: "sugar" },
+  { russian: "чай", english: "tea" },
+  { russian: "кофе", english: "coffee" },
+  { russian: "молоко", english: "milk" },
+  { russian: "хлеб", english: "bread" },
+  { russian: "сыр", english: "cheese" },
+  { russian: "масло", english: "butter" },
+  { russian: "яйцо", english: "egg" },
+  { russian: "курица", english: "chicken" },
+  { russian: "мясо", english: "meat" },
+  { russian: "рис", english: "rice" },
+  { russian: "макароны", english: "pasta" },
+  { russian: "салат", english: "salad" },
+  { russian: "фрукты", english: "fruit" },
+  { russian: "овощ", english: "vegetable" },
+  { russian: "апельсин", english: "orange" },
+  { russian: "лимон", english: "lemon" },
+  { russian: "банан", english: "banana" },
+  { russian: "виноград", english: "grape" },
+  { russian: "груша", english: "pear" },
+  { russian: "персик", english: "peach" },
+  { russian: "слива", english: "plum" },
+  { russian: "картофель", english: "potato" },
+  { russian: "морковь", english: "carrot" },
+  { russian: "лук", english: "onion" },
+  { russian: "помидор", english: "tomato" },
+  { russian: "огурец", english: "cucumber" },
+  { russian: "перец", english: "pepper" },
+  { russian: "салат", english: "lettuce" },
+  { russian: "шпинат", english: "spinach" },
+  { russian: "капуста", english: "cabbage" },
+  { russian: "чеснок", english: "garlic" },
+  { russian: "имбирь", english: "ginger" },
+  { russian: "дерево", english: "tree" },
+  { russian: "лист", english: "leaf" },
+  { russian: "цветок", english: "flower" },
+  { russian: "семя", english: "seed" },
+  { russian: "трава", english: "grass" },
+  { russian: "камень", english: "stone" },
+  { russian: "скала", english: "rock" },
+  { russian: "земля", english: "earth" },
+  { russian: "почва", english: "soil" },
+  { russian: "поле", english: "field" },
+  { russian: "лес", english: "forest" },
+  { russian: "джунгли", english: "jungle" },
+  { russian: "пустыня", english: "desert" },
+  { russian: "дождь", english: "rain" },
+  { russian: "снег", english: "snow" },
+  { russian: "лед", english: "ice" },
+  { russian: "огонь", english: "fire" },
+  { russian: "дым", english: "smoke" },
+  { russian: "воздух", english: "air" },
+  { russian: "ветер", english: "wind" },
+  { russian: "буря", english: "storm" },
+  { russian: "небо", english: "sky" },
+  { russian: "облако", english: "cloud" },
+  { russian: "солнце", english: "sun" },
+  { russian: "луна", english: "moon" },
+  { russian: "звезда", english: "star" },
+  { russian: "планета", english: "planet" },
+  { russian: "космос", english: "space" },
+  { russian: "вселенная", english: "universe" },
+  { russian: "галактика", english: "galaxy" },
+  { russian: "океан", english: "ocean" },
+  { russian: "озеро", english: "lake" },
+  { russian: "река", english: "river" },
+  { russian: "море", english: "sea" },
+  { russian: "пляж", english: "beach" },
+  { russian: "песок", english: "sand" },
+  { russian: "волна", english: "wave" },
+  { russian: "лодка", english: "boat" },
+  { russian: "корабль", english: "ship" },
+  { russian: "остров", english: "island" },
+  { russian: "полуостров", english: "peninsula" },
+  { russian: "берег", english: "coast" },
+  { russian: "гора", english: "mountain" },
+  { russian: "холм", english: "hill" },
+  { russian: "долина", english: "valley" },
+  { russian: "пещера", english: "cave" },
+  { russian: "лес", english: "forest" },
+  { russian: "джунгли", english: "jungle" },
+  { russian: "пустыня", english: "desert" },
+  { russian: "равнина", english: "plain" },
+  { russian: "поле", english: "field" },
+  { russian: "дорога", english: "road" },
+  { russian: "улица", english: "street" },
+  { russian: "мост", english: "bridge" },
+  { russian: "туннель", english: "tunnel" },
+  { russian: "машина", english: "car" },
+  { russian: "грузовик", english: "truck" },
+  { russian: "автобус", english: "bus" },
+  { russian: "поезд", english: "train" },
+  { russian: "велосипед", english: "bicycle" },
+  { russian: "мотоцикл", english: "motorcycle" },
+  { russian: "самолет", english: "airplane" },
+  { russian: "вертолет", english: "helicopter" },
+  { russian: "корабль", english: "ship" },
+  { russian: "лодка", english: "boat" },
+  { russian: "подводная лодка", english: "submarine" },
+  { russian: "ракета", english: "rocket" },
+  { russian: "спутник", english: "satellite" },
+  { russian: "космический корабль", english: "spaceship" },
+  { russian: "астронавт", english: "astronaut" },
+  { russian: "пилот", english: "pilot" },
+  { russian: "моряк", english: "sailor" },
+  { russian: "капитан", english: "captain" }
+];
+
 let score = 0;
 let streak = 0;
 let timeLeft = 60;
 let selectedRussianWord = null;
 let timerInterval;
-let availablePairs;
-let activePairs;
+let availablePairs = [...wordPairs];
+let activePairs = [];
 
 // DOM-элементы
 const timerElement = document.getElementById('timer');
@@ -160,10 +312,8 @@ function startGame() {
   score = 0;
   streak = 0;
   timeLeft = 60;
-  availablePairs = englishWords.map((eng, i) => ({ english: eng, russian: russianWords[i] }));
   activePairs = [];
   selectedRussianWord = null;
-
   updateScore();
   startButton.disabled = true;
   startTimer();
@@ -192,34 +342,35 @@ function updateScore() {
 // Генерация начальных 5 пар слов
 function generateInitialPairs() {
   activePairs = [];
-  for (let i = 0; i < 5; i++) {
-    addNewPair();
-  }
-  renderWords();
+  // Случайным образом выбираем 5 пар слов из доступных
+  const randomPairs = getRandomPairs(5);
+  renderWords(randomPairs);
 }
 
-// Добавление новой пары слов
-function addNewPair() {
-  if (availablePairs.length === 0) return;
-
-  const randomIndex = Math.floor(Math.random() * availablePairs.length);
-  const newPair = availablePairs.splice(randomIndex, 1)[0];
-  activePairs.push(newPair);
+// Функция для выбора случайных пар
+function getRandomPairs(count) {
+  let selected = [];
+  for (let i = 0; i < count; i++) {
+    const randomIndex = Math.floor(Math.random() * availablePairs.length);
+    selected.push(availablePairs[randomIndex]);
+    availablePairs.splice(randomIndex, 1);
+  }
+  return selected;
 }
 
 // Рендеринг слов
-function renderWords() {
+function renderWords(pairs) {
   const russianWordsColumn = document.getElementById('russianWordsColumn');
   const englishWordsColumn = document.getElementById('englishWordsColumn');
   
   russianWordsColumn.innerHTML = '';
   englishWordsColumn.innerHTML = '';
   
-  // Список английских слов, где порядок случайный, но парам соответствует их перевод
-  const shuffledEnglishWords = activePairs.map(pair => pair.english);
+  // Перемешиваем английские слова
+  const shuffledEnglishWords = pairs.map(pair => pair.english);
   shuffleArray(shuffledEnglishWords);
   
-  activePairs.forEach((pair, i) => {
+  pairs.forEach((pair, i) => {
     const rusBox = document.createElement('div');
     const engBox = document.createElement('div');
     
@@ -258,11 +409,13 @@ function checkMatch(russianWord, englishWord, element) {
     score += ++streak;
     updateScore();
     
-    // Удаляем угаданную пару и добавляем новую, если есть доступные слова
+    // Удаляем угаданную пару и добавляем новую
     setTimeout(() => {
       removePair(russianWord);
-      if (availablePairs.length > 0) addNewPair();
-      renderWords();
+      if (availablePairs.length > 0) {
+        addNewPair();
+        renderWords(activePairs);
+      }
     }, 500);
   } else {
     element.classList.add('wrong');
@@ -277,6 +430,14 @@ function checkMatch(russianWord, englishWord, element) {
 // Удаление пары из активных слов
 function removePair(russianWord) {
   activePairs = activePairs.filter(pair => pair.russian !== russianWord);
+}
+
+// Добавление новой пары
+function addNewPair() {
+  if (availablePairs.length === 0) return;
+  const randomIndex = Math.floor(Math.random() * availablePairs.length);
+  const newPair = availablePairs.splice(randomIndex, 1)[0];
+  activePairs.push(newPair);
 }
 
 // Сброс выделения и цвета
