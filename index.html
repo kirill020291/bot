@@ -368,7 +368,7 @@ function updateScore() {
 // Функция для генерации пар слов
 function generateInitialPairs() {
   const shuffledPairs = shuffle(wordPairs);
-  activePairs = shuffledPairs.slice(0, 6); // 6 случайных пар для начала игры
+  activePairs = shuffledPairs.slice(0, 4); // Восстанавливаем 4 пары слов
   renderGameBoard();
 }
 
