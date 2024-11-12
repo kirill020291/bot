@@ -1,99 +1,122 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Игра с угадыванием слов</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Игра с угадыванием слов</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    background-color: #87CEEB;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    overflow: hidden;
+  }
 
-  <!-- Подключение шрифта Roboto -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  /* Добавление облаков */
+  .clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
 
-  <style>
-    body {
-      background-color: #87CEEB;
-      font-family: 'Roboto', sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      position: relative;
-    }
+  .cloud {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    background: #FFFFFF;
+    opacity: 0.6;
+    border-radius: 100px;
+    animation: float 15s linear infinite;
+  }
 
-    /* Плавные шарики */
-    .balloon {
-      position: absolute;
-      bottom: -100px;
-      background-color: rgba(255, 0, 255, 0.6);
-      border-radius: 50%;
-      animation: floatBalloon 15s linear infinite;
-      pointer-events: none;
-    }
+  .cloud:nth-child(1) { left: 0%; top: 20%; animation-delay: 0s; }
+  .cloud:nth-child(2) { left: 25%; top: 40%; animation-delay: 5s; }
+  .cloud:nth-child(3) { left: 50%; top: 60%; animation-delay: 2s; }
+  .cloud:nth-child(4) { left: 75%; top: 80%; animation-delay: 8s; }
+  .cloud:nth-child(5) { left: 100%; top: 30%; animation-delay: 10s; }
 
-    /* Разные размеры шариков */
-    .balloon:nth-child(1) { width: 60px; height: 60px; animation-duration: 20s; animation-delay: 5s; }
-    .balloon:nth-child(2) { width: 80px; height: 80px; animation-duration: 18s; animation-delay: 2s; }
-    .balloon:nth-child(3) { width: 40px; height: 40px; animation-duration: 25s; animation-delay: 8s; }
-    .balloon:nth-child(4) { width: 70px; height: 70px; animation-duration: 22s; animation-delay: 1s; }
-    .balloon:nth-child(5) { width: 50px; height: 50px; animation-duration: 30s; animation-delay: 10s; }
+  @keyframes float {
+    0% { transform: translateX(-200px); }
+    100% { transform: translateX(100vw); }
+  }
 
-    @keyframes floatBalloon {
-      0% { bottom: -100px; left: 10%; transform: scale(1); }
-      50% { left: 45%; transform: scale(1.2); }
-      100% { bottom: 100%; left: 90%; transform: scale(1); }
-    }
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 20px;
+  }
 
-    /* Стиль для кнопки "Начать игру" */
-    .start-button {
-      background-color: #ff7f50;
-      color: white;
-      border: none;
-      padding: 15px 40px;
-      font-size: 24px;
-      font-weight: 700;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-top: 20px;
-    }
+  .timer, .score {
+    font-size: 24px;
+  }
 
-    .start-button:hover {
-      background-color: #ff6347;
-    }
+  .game-board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
 
-    /* Таймер */
-    .timer {
-      font-size: 48px;
-      font-weight: 700;
-      color: #333;
-      margin-top: 30px;
-    }
+  .column {
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px;
+  }
 
-    /* Количество очков */
-    .score {
-      font-size: 36px;
-      font-weight: 700;
-      color: #333;
-      margin-top: 10px;
-    }
-  </style>
+  .box {
+    width: 120px;
+    height: 50px;
+    margin: 10px;
+    background-color: white;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
+    border-radius: 8px; /* Сглаженные углы */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .selected { background-color: #dcdcdc; }
+  .correct { background-color: green; transform: scale(1.1); }
+  .wrong { background-color: red; transform: scale(1.1); }
+  .timer.critical { color: red; animation: blink 1s step-start infinite; }
+
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
 </head>
 <body>
-  <!-- Плавающие шарики -->
-  <div class="balloon" style="left: 10%;"></div>
-  <div class="balloon" style="left: 30%;"></div>
-  <div class="balloon" style="left: 50%;"></div>
-  <div class="balloon" style="left: 70%;"></div>
-  <div class="balloon" style="left: 90%;"></div>
 
-  <!-- Контент страницы -->
-  <div>
-    <h1>Игра с угадыванием слов</h1>
-    <button class="start-button" onclick="startGame()">Начать игру</button>
-    <div class="timer" id="timer">01:00</div>
-    <div class="score" id="score">Очки: 0</div>
-  </div>
+<div class="clouds">
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+</div>
 
-  <script>
+<div class="header">
+  <div class="timer" id="timer">60</div>
+  <button id="startButton">Начать игру</button>
+  <div class="score" id="score">Очки: 0</div>
+</div>
+
+<div class="game-board" id="gameBoard">
+  <div class="column" id="russianWordsColumn"></div>
+  <div class="column" id="englishWordsColumn"></div>
+</div>
+
+<script>
 
 const wordPairs = [
   { russian: "яблоко", english: "apple" },
