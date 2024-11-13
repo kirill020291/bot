@@ -284,16 +284,17 @@ const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
 const startButton = document.getElementById('startButton');
 const backgroundMusic = new Audio('sounds/background.mp3.mp3');
+backgroundMusic.volume = 0.3;
 const correctSound = new Audio('sounds/correct.mp3.wav');
 const wrongSound = new Audio('sounds/wrong.mp3.wav');
 const musicToggleButton = document.getElementById('musicToggleButton');
 musicToggleButton.addEventListener('click', toggleMusic);
 
-function playBackgroundMusic() {
-  backgroundMusic.volume = 0.3;
-  backgroundMusic.loop = false;
-  backgroundMusic.play();
-}
+//function playBackgroundMusic() {
+  //backgroundMusic.volume = 0.3;
+  //backgroundMusic.loop = false;
+  //ackgroundMusic.play();
+//}
 
 function toggleMusic() {
   if (isMusicPlaying) {
