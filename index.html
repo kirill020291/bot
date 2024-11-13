@@ -109,6 +109,7 @@
   <div class="timer" id="timer">60</div>
   <button id="startButton">Начать игру</button>
   <div class="score" id="score">Очки: 0</div>
+  <button id="musicToggleButton">Отключить музыку</button>
 </div>
 
 <div class="game-board" id="gameBoard">
@@ -285,11 +286,26 @@ const startButton = document.getElementById('startButton');
 const backgroundMusic = new Audio('sounds/background.mp3.mp3');
 const correctSound = new Audio('sounds/correct.mp3.wav');
 const wrongSound = new Audio('sounds/wrong.mp3.wav');
+const musicToggleButton = document.getElementById('musicToggleButton');
+musicToggleButton.addEventListener('click', toggleMusic);
 
 function playBackgroundMusic() {
+  backgroundMusic.volume = 0.3;
   backgroundMusic.loop = true;
   backgroundMusic.play();
 }
+
+function toggleMusic() {
+  if (isMusicPlaying) {
+    backgroundMusic.pause(); // Останавливаем музыку
+    musicToggleButton.textContent = "Включить музыку"; // Меняем текст кнопки
+  } else {
+    backgroundMusic.play(); // Воспроизводим музыку
+    musicToggleButton.textContent = "Отключить музыку"; // Меняем текст кнопки
+  }
+  isMusicPlaying = !isMusicPlaying; // Переключаем состояние
+}
+
 // Начало игры
 function startGame() {
   score = 0;
