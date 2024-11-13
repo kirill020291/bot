@@ -318,9 +318,6 @@ let timerInterval;
 let availablePairs = [...wordPairs];
 let activePairs = [];
 
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
-
 // DOM-элементы
 const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
@@ -531,6 +528,9 @@ function resetGame() {
 // Событие для кнопки начать
 startButton.addEventListener('click', startGame);
 
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue } from "firebase/database";
+
 const firebaseConfig = {
   apiKey: "AIzaSyA9Ve82TP0QJPuNJwi6oSx3EbPIqXR3L4o",
   authDomain: "myapp-2f245.firebaseapp.com",
@@ -541,7 +541,7 @@ const firebaseConfig = {
   measurementId: "G-4ZQ8QDJWW7"
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // Кнопка и модальное окно для лидерборда
