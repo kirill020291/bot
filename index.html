@@ -45,6 +45,21 @@
     100% { transform: translateX(100vw); }
   }
 
+  @media (max-width: 600px) {
+    .header, .game-board, .button {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: 10px;
+    }
+    button {
+      font-size: 16px;
+      padding: 8px 12px;
+      margin-top: 10px;
+      width: 80%; /* Растягивание кнопки на 80% ширины экрана */
+    }
+  }
+
   .header {
     display: flex;
     justify-content: space-around; /* Пространство между элементами */
