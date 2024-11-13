@@ -40,6 +40,36 @@
   .cloud:nth-child(4) { left: 75%; top: 80%; animation-delay: 8s; }
   .cloud:nth-child(5) { left: 100%; top: 30%; animation-delay: 10s; }
 
+  @keyframes leaderboardAnimation {
+  0% { background-color: #fff; }
+  50% { background-color: #f0f; }
+  100% { background-color: #fff; }
+}
+
+/* Применение анимации на hover */
+.leaderboard-item:hover {
+  animation: leaderboardAnimation 1s ease-in-out;
+  cursor: pointer;
+}
+
+/* Общие стили для списка лидерборда */
+.leaderboard {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.leaderboard-item {
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.leaderboard-item:nth-child(odd) {
+  background-color: #f9f9f9;
+}
   @keyframes float {
     0% { transform: translateX(-200px); }
     100% { transform: translateX(100vw); }
@@ -148,9 +178,11 @@
   <div class="column" id="englishWordsColumn"></div>
 </div>
 
-<div id="leaderboardSection">
+<div class="leaderboard-container">
   <h2>Лидерборд</h2>
-  <ul id="leaderboardList"></ul> <!-- Здесь будет отображаться лидерборд -->
+  <ul class="leaderboard" id="leaderboard-list">
+    <!-- Лидерборд будет обновляться динамически -->
+  </ul>
 </div>
 
 <script>
@@ -355,6 +387,7 @@ function toggleMusic() {
   }
   isMusicPlaying = !isMusicPlaying; // Переключаем состояние
 }
+
 musicToggleButton.addEventListener('click', toggleMusic);
 // Начало игры
 function startGame() {
@@ -511,42 +544,44 @@ function shuffleArray(array) {
 }
 
 // Функция для сохранения рекорда
-function saveRecord(score) {
-  const username = localStorage.getItem('username');  // Получаем имя пользователя из localStorage
-  if (!username) {
-    console.error('Имя пользователя не найдено!');
-    return;
-  }
+function saveScore(playerName, score) {
+    // Получаем текущие данные лидерборда
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
 
-  let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    // Добавляем нового игрока
+    leaderboard.push({ name: playerName, score: score });
 
-  // Добавляем новый рекорд с именем пользователя
-  leaderboard.push({ name: username, score: score });
+    // Сортируем список по очкам в порядке убывания
+    leaderboard.sort((a, b) => b.score - a.score);
 
-  // Сортируем по убыванию очков
-  leaderboard.sort((a, b) => b.score - a.score);
+    // Ограничиваем список топ-10, если нужно
+    leaderboard = leaderboard.slice(0, 5);
 
-  // Сохраняем в localStorage
-  localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+    // Сохраняем обновленный список в localStorage
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
 
-  // Обновляем лидерборд
-  updateLeaderboard();
+    // Обновляем отображение лидерборда
+    updateLeaderboard();
 }
 
 // Функция для обновления лидерборда
 function updateLeaderboard() {
-  const leaderboardList = document.getElementById('leaderboardList');
-  leaderboardList.innerHTML = '';
+    const leaderboardList = document.getElementById('leaderboard-list');
+    leaderboardList.innerHTML = ''; // Очищаем текущий список
 
-  let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    // Получаем данные о лидерборде из localStorage
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
 
-  leaderboard.forEach((entry) => {
-    const li = document.createElement('li');
-    li.textContent = `${entry.name}: ${entry.score} очков`;
-    leaderboardList.appendChild(li);
-  });
+    // Заполняем список
+    leaderboard.forEach(player => {
+        const li = document.createElement('li');
+        li.classList.add('leaderboard-item');
+        li.textContent = `${player.name}: ${player.score} очков`;
+        leaderboardList.appendChild(li);
+    });
 }
-saveRecord(score)
+
+updateLeaderboard();
 // Конец игры
 function endGame() {
   clearInterval(timerInterval);
