@@ -320,9 +320,10 @@ function startGame() {
   timerElement.textContent = timeLeft;
   timerElement.classList.remove('critical');
   startButton.disabled = true;
+  backgroundMusic.play();
+  backgroundMusic.loop = true;
   startTimer();
   generateInitialPairs();
-  playBackgroundMusic();
 }
 
 // Обновление таймера
