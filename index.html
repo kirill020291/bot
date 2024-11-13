@@ -46,47 +46,44 @@
   }
 
   @media (max-width: 600px) {
-  /* Общие стили для всей верхней части */
+  /* Общая структура */
   .header {
     display: flex;
-    flex-direction: column;      /* Структура в колонку */
-    justify-content: flex-start; /* Кнопки будут сверху */
-    align-items: center;        /* Выравнивание по центру */
-    width: 100%;                 /* Ширина на весь экран */
-    padding: 10px;
-    box-sizing: border-box;      /* Учитываем padding в ширине */
+    flex-direction: column;        /* Все элементы внутри header будут располагаться вертикально */
+    justify-content: space-between; /* Элементы будут разделены по вертикали */
+    height: 100vh;                 /* Полная высота экрана */
+    width: 100%;
   }
 
-  /* Таймер, начало игры и очки будут вверху */
+  /* Верхняя секция (таймер, начать игру и очки) */
   .top-section {
     display: flex;
-    flex-direction: row;         /* Выравнивание элементов в строку */
-    justify-content: space-between;
-    width: 100%;                 /* Используем всю ширину */
-    margin-bottom: 20px;         /* Отступ между верхним и нижним блоком */
+    justify-content: space-around;  /* Элементы будут равномерно распределены по ширине */
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
   }
 
   .top-section .timer,
   .top-section .start-button,
   .top-section .score {
-    flex: 1;                     /* Каждый элемент будет занимать одинаковую ширину */
-    margin: 0 10px;              /* Отступы между элементами */
-    text-align: center;          /* Выравнивание текста по центру */
-    font-size: 16px;             /* Размер шрифта */
+    flex: 1; /* Каждый элемент будет занимать одинаковую ширину */
+    text-align: center;
+    font-size: 16px;
   }
 
-  /* Кнопки внизу экрана */
-  .bottom-section {
-    display: flex;
-    justify-content: space-between;
+  /* Игровое поле (кнопки для выбора слов) */
+  .game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 колонки для кнопок */
+    gap: 10px;
+    margin: 20px 0;
     width: 100%;
   }
 
-  .bottom-section button {
-    flex: 1;
-    margin: 5px;
+  .game-board button {
+    padding: 15px;
     font-size: 14px;
-    padding: 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -94,8 +91,30 @@
     transition: background-color 0.3s;
   }
 
-  .bottom-section button:hover {
+  .game-board button:hover {
     background-color: #45a049;
+  }
+
+  /* Нижняя секция (кнопки выключить музыку и лидерборд) */
+  .bottom-section {
+    display: flex;
+    justify-content: space-around;  /* Элементы будут равномерно распределены по ширине */
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .bottom-section button {
+    font-size: 14px;
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  .bottom-section button:hover {
+    background-color: #e53935;
   }
 }
   
@@ -191,16 +210,25 @@
 </div>
 
 <div class="header">
-  <div class="timer" id="timer">60</div>
-  <button id="startButton">Начать игру</button>
-  <div class="score" id="score">Очки: 0</div>
-  <button id="leaderboardButton">Лидерборд</button>
-  <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
-    <h2>Лидерборд</h2>
-    <div id="leaderboardContent">Загрузка...</div>
-    <button onclick="closeLeaderboard()">Закрыть</button>
+  <div class="top-section">
+    <div class="timer" id="timer">60</div>
+    <button id="startButton">Начать игру</button>
+    <div class="score" id="score">Очки: 0</div>
   </div>
-  <button id="musicToggleButton">Отключить музыку</button>
+
+  <div class="game-board" id="gameBoard">
+    <div class="column" id="russianWordsColumn"></div>
+    <div class="column" id="englishWordsColumn"></div>
+  </div>
+
+  <div class="bottom-section">
+    <button id="leaderboardButton">Лидерборд</button>
+    <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+      <h2>Лидерборд</h2>
+      <div id="leaderboardContent">Загрузка...</div>
+      <button onclick="closeLeaderboard()">Закрыть</button>
+    </div>
+    <button id="musicToggleButton">Отключить музыку</button>
 </div>
 
 
