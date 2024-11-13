@@ -542,7 +542,11 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
+function getUsernameFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  console.log(urlParams.get('username')); // Логируем значение параметра
+  return urlParams.get('username');
+}
 // Функция для сохранения рекорда
 function saveScore(playerName, score) {
     // Получаем текущие данные лидерборда
@@ -585,6 +589,7 @@ updateLeaderboard();
 // Конец игры
 function endGame() {
   clearInterval(timerInterval);
+  saveScore(localStorage.getItem('username'), score); // Сохранение очков
   const playAgain = confirm(`Игра окончена! Набранные очки: ${score}\nХотите сыграть снова?`);
   if (playAgain) {
     startGame();
