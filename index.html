@@ -140,8 +140,16 @@
   <div class="timer" id="timer">60</div>
   <button id="startButton">Начать игру</button>
   <div class="score" id="score">Очки: 0</div>
+  <button id="leaderboardButton">Лидерборд</button>
+  <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+    <h2>Лидерборд</h2>
+    <div id="leaderboardContent">Загрузка...</div>
+    <button onclick="closeLeaderboard()">Закрыть</button>
+  </div>
   <button id="musicToggleButton">Отключить музыку</button>
 </div>
+
+
 
 <div class="game-board" id="gameBoard">
   <div class="column" id="russianWordsColumn"></div>
@@ -309,6 +317,9 @@ let selectedRussianWord = null;
 let timerInterval;
 let availablePairs = [...wordPairs];
 let activePairs = [];
+
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
 
 // DOM-элементы
 const timerElement = document.getElementById('timer');
@@ -519,7 +530,68 @@ function resetGame() {
 
 // Событие для кнопки начать
 startButton.addEventListener('click', startGame);
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA9Ve82TP0QJPuNJwi6oSx3EbPIqXR3L4o",
+  authDomain: "myapp-2f245.firebaseapp.com",
+  projectId: "myapp-2f245",
+  storageBucket: "myapp-2f245.firebasestorage.app",
+  messagingSenderId: "261793320819",
+  appId: "1:261793320819:web:a159b6531c638c57afff06",
+  measurementId: "G-4ZQ8QDJWW7"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+// Кнопка и модальное окно для лидерборда
+const leaderboardButton = document.getElementById('leaderboardButton');
+const leaderboardModal = document.getElementById('leaderboardModal');
+const leaderboardContent = document.getElementById('leaderboardContent');
+
+// Функция для открытия модального окна лидерборда
+function openLeaderboard() {
+  leaderboardModal.style.display = 'block';
+  fetchLeaderboardData(); // Загружаем данные при открытии
+}
+
+// Функция для закрытия модального окна лидерборда
+function closeLeaderboard() {
+  leaderboardModal.style.display = 'none';
+}
+
+// Добавляем обработчик события для открытия лидерборда
+leaderboardButton.addEventListener('click', openLeaderboard);
+
+// Функция для получения данных лидерборда из Firebase
+function fetchLeaderboardData() {
+  // Убедитесь, что у вас есть доступ к базе данных Firebase
+  const databaseRef = ref(database, 'leaderboard');
+  
+  // Получаем данные
+  onValue(databaseRef, (snapshot) => {
+    leaderboardContent.innerHTML = ''; // Очищаем текущее содержимое
+    const scores = [];
+
+    snapshot.forEach((childSnapshot) => {
+      const data = childSnapshot.val();
+      scores.push({ name: data.name, score: data.score });
+    });
+
+    // Сортируем по убыванию очков и отображаем
+    scores.sort((a, b) => b.score - a.score);
+    scores.forEach((entry) => {
+      const scoreElement = document.createElement('div');
+      scoreElement.textContent = `${entry.name}: ${entry.score}`;
+      leaderboardContent.appendChild(scoreElement);
+    });
+  });
+}
+
+
 </script>
+
+
 
 </body>
 </html>
