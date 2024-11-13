@@ -148,6 +148,11 @@
   <div class="column" id="englishWordsColumn"></div>
 </div>
 
+<div id="leaderboardSection">
+  <h2>Лидерборд</h2>
+  <ul id="leaderboardList"></ul> <!-- Здесь будет отображаться лидерборд -->
+</div>
+
 <script>
 
 const wordPairs = [
@@ -328,6 +333,17 @@ const musicToggleButton = document.getElementById('musicToggleButton');
   //backgroundMusic.loop = false;
   //ackgroundMusic.play();
 //}
+// Получаем имя пользователя из URL
+function getUsernameFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('username'); // Это значение мы получаем из параметра username
+}
+
+// Сохраняем имя пользователя в localStorage
+const username = getUsernameFromURL();
+if (username) {
+  localStorage.setItem('username', username);  // Сохраняем имя пользователя в localStorage
+}
 
 function toggleMusic() {
   if (isMusicPlaying) {
@@ -494,6 +510,43 @@ function shuffleArray(array) {
   }
 }
 
+// Функция для сохранения рекорда
+function saveRecord(score) {
+  const username = localStorage.getItem('username');  // Получаем имя пользователя из localStorage
+  if (!username) {
+    console.error('Имя пользователя не найдено!');
+    return;
+  }
+
+  let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+
+  // Добавляем новый рекорд с именем пользователя
+  leaderboard.push({ name: username, score: score });
+
+  // Сортируем по убыванию очков
+  leaderboard.sort((a, b) => b.score - a.score);
+
+  // Сохраняем в localStorage
+  localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+
+  // Обновляем лидерборд
+  updateLeaderboard();
+}
+
+// Функция для обновления лидерборда
+function updateLeaderboard() {
+  const leaderboardList = document.getElementById('leaderboardList');
+  leaderboardList.innerHTML = '';
+
+  let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+
+  leaderboard.forEach((entry) => {
+    const li = document.createElement('li');
+    li.textContent = `${entry.name}: ${entry.score} очков`;
+    leaderboardList.appendChild(li);
+  });
+}
+saveRecord(score)
 // Конец игры
 function endGame() {
   clearInterval(timerInterval);
