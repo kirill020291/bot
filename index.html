@@ -282,7 +282,14 @@ let activePairs = [];
 const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
 const startButton = document.getElementById('startButton');
+const backgroundMusic = new Audio('background.mp3');
+const correctSound = new Audio('correct.mp3');
+const wrongSound = new Audio('wrong.mp3');
 
+function playBackgroundMusic() {
+  backgroundMusic.loop = true;
+  backgroundMusic.play();
+}
 // Начало игры
 function startGame() {
   score = 0;
@@ -296,6 +303,7 @@ function startGame() {
   startButton.disabled = true;
   startTimer();
   generateInitialPairs();
+  playBackgroundMusic();
 }
 
 // Обновление таймера
@@ -383,6 +391,7 @@ function checkMatch(pair, selectedEnglish, element) {
     selectedRussianWord.element.classList.add('correct');
     score += ++streak;
     updateScore();
+    handleCorrectAnswer();
     
     setTimeout(() => {
       replaceMatchedPair(selectedRussianWord.pair);
@@ -394,6 +403,7 @@ function checkMatch(pair, selectedEnglish, element) {
     streak = 0;
     score = Math.max(0, score - 1);
     updateScore();
+    handleWrongAnswer();
     setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
   }
 }
