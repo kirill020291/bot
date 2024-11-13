@@ -380,6 +380,14 @@ function selectRussianWord(pair, element) {
   element.classList.add('selected');
 }
 
+function handleCorrectAnswer() {
+  correctSound.play();
+}
+
+// Воспроизведение звука для неправильного ответа
+function handleWrongAnswer() {
+  wrongSound.play();
+}
 // Проверка совпадения
 function checkMatch(pair, selectedEnglish, element) {
   if (!selectedRussianWord) return;
@@ -404,6 +412,7 @@ function checkMatch(pair, selectedEnglish, element) {
     score = Math.max(0, score - 1);
     updateScore();
     handleWrongAnswer();
+    
     setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
   }
 }
