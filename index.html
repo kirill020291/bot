@@ -347,6 +347,8 @@ let timerInterval;
 let availablePairs = [...wordPairs];
 let activePairs = [];
 
+<script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-database.js"></script>
 // DOM-элементы
 const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
@@ -360,16 +362,26 @@ const correctSound = new Audio('sounds/correct.mp3.wav');
 const wrongSound = new Audio('sounds/wrong.mp3.wav');
 const musicToggleButton = document.getElementById('musicToggleButton');
 
+const firebaseConfig = {
+  apiKey: "AIzaSyA9Ve82TP0QJPuNJwi6oSx3EbPIqXR3L4o",
+  authDomain: "myapp-2f245.firebaseapp.com",
+  projectId: "myapp-2f245",
+  storageBucket: "myapp-2f245.firebasestorage.app",
+  messagingSenderId: "261793320819",
+  appId: "1:261793320819:web:a159b6531c638c57afff06",
+  measurementId: "G-4ZQ8QDJWW7"
+};
+const app = firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
 //function playBackgroundMusic() {
   //backgroundMusic.volume = 0.3;
   //backgroundMusic.loop = false;
   //ackgroundMusic.play();
 //}
 // Получаем имя пользователя из URL
-function getUsernameFromURL() {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('username'); // Это значение мы получаем из параметра username
-}
+const username = getUsernameFromURL();
+if (username) localStorage.setItem('username', username);
 
 // Сохраняем имя пользователя в localStorage
 const username = getUsernameFromURL();
@@ -542,54 +554,49 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-function getUsernameFromURL() {
-  const urlParams = new URLSearchParams(window.location.search);
-  console.log(urlParams.get('username')); // Логируем значение параметра
-  return urlParams.get('username');
-}
+
 // Функция для сохранения рекорда
 function saveScore(playerName, score) {
-    // Получаем текущие данные лидерборда
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    // Сохранение очков пользователя в базе данных Firebase
+    const leaderboardRef = database.ref('leaderboard');
 
-    // Добавляем нового игрока
-    leaderboard.push({ name: playerName, score: score });
-
-    // Сортируем список по очкам в порядке убывания
-    leaderboard.sort((a, b) => b.score - a.score);
-
-    // Ограничиваем список топ-10, если нужно
-    leaderboard = leaderboard.slice(0, 5);
-
-    // Сохраняем обновленный список в localStorage
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-
-    // Обновляем отображение лидерборда
-    updateLeaderboard();
+    // Добавляем данные игрока
+    leaderboardRef.push({
+        name: playerName,
+        score: score
+    });
 }
 
-// Функция для обновления лидерборда
+
 function updateLeaderboard() {
     const leaderboardList = document.getElementById('leaderboard-list');
     leaderboardList.innerHTML = ''; // Очищаем текущий список
 
-    // Получаем данные о лидерборде из localStorage
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    const leaderboardRef = database.ref('leaderboard');
+    leaderboardRef.orderByChild('score').limitToLast(5).once('value', (snapshot) => {
+        const leaderboardData = [];
+        snapshot.forEach((childSnapshot) => {
+            leaderboardData.push(childSnapshot.val());
+        });
 
-    // Заполняем список
-    leaderboard.forEach(player => {
-        const li = document.createElement('li');
-        li.classList.add('leaderboard-item');
-        li.textContent = `${player.name}: ${player.score} очков`;
-        leaderboardList.appendChild(li);
+        leaderboardData.sort((a, b) => b.score - a.score);
+        
+        leaderboardData.forEach((player) => {
+            const li = document.createElement('li');
+            li.classList.add('leaderboard-item');
+            li.textContent = `${player.name}: ${player.score} очков`;
+            leaderboardList.appendChild(li);
+        });
     });
 }
+
 
 updateLeaderboard();
 // Конец игры
 function endGame() {
   clearInterval(timerInterval);
-  saveScore(localStorage.getItem('username'), score); // Сохранение очков
+  const playerName = localStorage.getItem('username') || "Игрок";
+  saveScore(playerName, score);
   const playAgain = confirm(`Игра окончена! Набранные очки: ${score}\nХотите сыграть снова?`);
   if (playAgain) {
     startGame();
