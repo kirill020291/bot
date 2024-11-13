@@ -40,35 +40,6 @@
   .cloud:nth-child(4) { left: 75%; top: 80%; animation-delay: 8s; }
   .cloud:nth-child(5) { left: 100%; top: 30%; animation-delay: 10s; }
 
-  @keyframes leaderboardAnimation {
-  0% { background-color: #fff; }
-  50% { background-color: #f0f; }
-  100% { background-color: #fff; }
-}
-
-/* Применение анимации на hover */
-.leaderboard-item:hover {
-  background-color: #e0e0e0;
-}
-
-/* Общие стили для списка лидерборда */
-.leaderboard {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.leaderboard-item {
-  padding: 10px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  margin-bottom: 5px;
-  font-size: 18px;
-}
-
-.leaderboard-item:nth-child(odd) {
-  background-color: #f9f9f9;
-}
   @keyframes float {
     0% { transform: translateX(-200px); }
     100% { transform: translateX(100vw); }
@@ -176,16 +147,6 @@
   <div class="column" id="russianWordsColumn"></div>
   <div class="column" id="englishWordsColumn"></div>
 </div>
-
-<div class="leaderboard-container">
-  <h2>Лидерборд</h2>
-  <ul class="leaderboard" id="leaderboard-list">
-    <!-- Лидерборд будет обновляться динамически -->
-  </ul>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 
 <script>
 
@@ -341,19 +302,6 @@ const wordPairs = [
   { russian: "капитан", english: "captain" }
 ];
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA9Ve82TP0QJPuNJwi6oSx3EbPIqXR3L4o",
-  authDomain: "myapp-2f245.firebaseapp.com",
-  projectId: "myapp-2f245",
-  storageBucket: "myapp-2f245.firebasestorage.app",
-  messagingSenderId: "261793320819",
-  appId: "1:261793320819:web:a159b6531c638c57afff06",
-  measurementId: "G-4ZQ8QDJWW7"
-};
-
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-const database = getDatabase(app);
-
 let score = 0;
 let streak = 0;
 let timeLeft = 60;
@@ -380,9 +328,6 @@ const musicToggleButton = document.getElementById('musicToggleButton');
   //backgroundMusic.loop = false;
   //ackgroundMusic.play();
 //}
-// Получаем имя пользователя из URL
-const username = getUsernameFromURL();
-if (username) localStorage.setItem('username', username);
 
 function toggleMusic() {
   if (isMusicPlaying) {
@@ -394,42 +339,7 @@ function toggleMusic() {
   }
   isMusicPlaying = !isMusicPlaying; // Переключаем состояние
 }
-
 musicToggleButton.addEventListener('click', toggleMusic);
-
-function saveScore(playerName, score) {
-    // Сохранение очков пользователя в базе данных Firebase
-    const leaderboardRef = database.ref('leaderboard');
-
-    // Добавляем данные игрока
-    leaderboardRef.push({
-        name: playerName,
-        score: score
-    });
-}
-
-function updateLeaderboard() {
-    const leaderboardList = document.getElementById('leaderboard-list');
-    leaderboardList.innerHTML = ''; // Очищаем текущий список
-
-    const leaderboardRef = database.ref('leaderboard');
-    leaderboardRef.orderByChild('score').limitToLast(5).once('value', (snapshot) => {
-        const leaderboardData = [];
-        snapshot.forEach((childSnapshot) => {
-            leaderboardData.push(childSnapshot.val());
-        });
-
-        leaderboardData.sort((a, b) => b.score - a.score);
-        
-        leaderboardData.forEach((player) => {
-            const li = document.createElement('li');
-            li.classList.add('leaderboard-item');
-            li.textContent = `${player.name}: ${player.score} очков`;
-            leaderboardList.appendChild(li);
-        });
-    });
-}
-
 // Начало игры
 function startGame() {
   score = 0;
@@ -584,13 +494,9 @@ function shuffleArray(array) {
   }
 }
 
-
-updateLeaderboard();
 // Конец игры
 function endGame() {
   clearInterval(timerInterval);
-  const playerName = localStorage.getItem('username') || "Игрок";
-  saveScore(playerName, score);
   const playAgain = confirm(`Игра окончена! Набранные очки: ${score}\nХотите сыграть снова?`);
   if (playAgain) {
     startGame();
