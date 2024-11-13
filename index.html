@@ -286,12 +286,10 @@ const startButton = document.getElementById('startButton');
 const backgroundMusic = new Audio('sounds/background.mp3.mp3');
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.3;
-backgroundMusic.play()
-let isMusicPlaying = true;
+let isMusicPlaying = false;
 const correctSound = new Audio('sounds/correct.mp3.wav');
 const wrongSound = new Audio('sounds/wrong.mp3.wav');
 const musicToggleButton = document.getElementById('musicToggleButton');
-musicToggleButton.addEventListener('click', toggleMusic);
 
 //function playBackgroundMusic() {
   //backgroundMusic.volume = 0.3;
@@ -305,11 +303,12 @@ function toggleMusic() {
     musicToggleButton.textContent = "Включить музыку"; // Меняем текст кнопки
   } else {
     backgroundMusic.play(); // Воспроизводим музыку
-    musicToggleButton.textContent = "Отключить музыку"; // Меняем текст кнопки
   }
+    musicToggleButton.textContent = "Отключить музыку"; // Меняем текст кнопки
+  
   isMusicPlaying = !isMusicPlaying; // Переключаем состояние
 }
-
+musicToggleButton.addEventListener('click', toggleMusic);
 // Начало игры
 function startGame() {
   score = 0;
