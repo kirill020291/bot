@@ -282,9 +282,9 @@ let activePairs = [];
 const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
 const startButton = document.getElementById('startButton');
-const backgroundMusic = new Audio('background.mp3');
-const correctSound = new Audio('correct.mp3');
-const wrongSound = new Audio('wrong.mp3');
+const backgroundMusic = new Audio('sounds/background.mp3.mp3');
+const correctSound = new Audio('sounds/correct.mp3.wav');
+const wrongSound = new Audio('sounds/wrong.mp3.wav');
 
 function playBackgroundMusic() {
   backgroundMusic.loop = true;
@@ -412,7 +412,7 @@ function checkMatch(pair, selectedEnglish, element) {
     score = Math.max(0, score - 1);
     updateScore();
     handleWrongAnswer();
-    
+
     setTimeout(() => resetPair(element, selectedRussianWord.element), 500);
   }
 }
