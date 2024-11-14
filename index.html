@@ -11,6 +11,8 @@
       font-family: 'Press Start 2P', cursive;
       text-align: center;
       overflow: hidden;
+      margin: 0;
+      padding: 0;
     }
 
     /* Добавление облаков */
@@ -55,6 +57,10 @@
       background-color: rgba(255, 255, 255, 0.8);
       border-radius: 15px;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      position: fixed;
+      top: 0;
+      z-index: 10;
     }
 
     .timer, .score {
@@ -67,26 +73,37 @@
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
 
+    /* Игровое поле */
     .game-board {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 120px; /* Чтобы избежать наложения на header */
       gap: 10px;
-      margin: 20px 0;
       width: 100%;
     }
 
-    .game-board button {
-      padding: 15px;
-      font-size: 14px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+    .game-board .column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
     }
 
-    .game-board button:hover {
-      background-color: #45a049;
+    .box {
+      width: 120px;
+      height: 50px;
+      background-color: white;
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      opacity: 1;
+      transform: scale(1);
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     /* Стили для кнопок */
@@ -111,7 +128,7 @@
       transform: scale(0.95);
     }
 
-    /* Нижняя секция (кнопки выключить музыку и лидерборд) */
+    /* Нижняя секция */
     .bottom-section {
       display: flex;
       justify-content: space-around;
@@ -135,21 +152,12 @@
 
     /* Мобильная адаптация */
     @media (max-width: 600px) {
-      /* Верхняя секция (таймер, начать игру и очки) */
+      /* Верхняя секция */
       .header {
-        display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        height: 100vh;
-        width: 100%;
-      }
-
-      .top-section {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-        margin-top: 10px;
+        height: auto;
+        padding: 15px;
+        gap: 10px;
       }
 
       .top-section .timer,
@@ -158,29 +166,27 @@
         font-size: 16px;
         width: 100%;
         text-align: center;
-        margin: 5px 0;
       }
 
       .game-board {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* 2 колонки на мобильных */
-        gap: 5px;
-        margin: 15px 0;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 140px;
+      }
+
+      .game-board .column {
         width: 100%;
       }
 
       .bottom-section {
-        display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
         width: 100%;
       }
 
       .bottom-section button {
         font-size: 14px;
-        width: 90%;
-        margin: 5px;
+        width: 100%;
+        margin: 5px 0;
         padding: 10px;
       }
     }
@@ -213,8 +219,16 @@
 </div>
 
 <div class="game-board" id="gameBoard">
-  <div class="column" id="russianWordsColumn"></div>
-  <div class="column" id="englishWordsColumn"></div>
+  <div class="column" id="russianWordsColumn">
+    <div class="box" id="box1">Русское слово 1</div>
+    <div class="box" id="box2">Русское слово 2</div>
+    <div class="box" id="box3">Русское слово 3</div>
+  </div>
+  <div class="column" id="englishWordsColumn">
+    <div class="box" id="box4">English Word 1</div>
+    <div class="box" id="box5">English Word 2</div>
+    <div class="box" id="box6">English Word 3</div>
+  </div>
 </div>
 
 <div class="bottom-section">
