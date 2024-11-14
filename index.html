@@ -50,14 +50,14 @@
     /* Заголовок и кнопки */
     .header {
       display: flex;
-      justify-content: space-between; /* Кнопки в одну линию */
+      justify-content: space-between;
       align-items: center;
       padding: 15px;
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 15px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
       gap: 15px;
-      flex-wrap: nowrap; /* Не переносить кнопки на новую строку */
+      flex-wrap: nowrap;
     }
 
     .timer, .score {
@@ -84,35 +84,38 @@
       display: flex;
       justify-content: center;
       margin-top: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
     .column {
       display: flex;
       flex-direction: column;
-      margin: 0 5px;
+      align-items: center;
     }
 
     /* Прямоугольники для слов */
     .box {
-      width: 120px;
-      height: 50px;
+      width: 150px; /* Увеличены размеры прямоугольников */
+      height: 60px;
       margin: 10px;
       background-color: rgba(255, 255, 255, 0.5);
       color: #333;
-      font-size: 16px;
+      font-size: 18px;
       text-align: center;
-      line-height: 50px;
+      line-height: 60px;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.3s ease;
       border: 2px solid #ffb3b3;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
       word-wrap: break-word;
-      overflow: hidden; /* Чтобы текст не выходил за пределы */
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: 'Press Start 2P', cursive;
+      white-space: normal; /* Разрешает тексту переноситься */
     }
 
     /* Принудительное уменьшение шрифта для длинных слов */
@@ -215,10 +218,9 @@
       }
 
       .box {
-        width: 100px;
-        height: 40px;
-        font-size: 14px;
-        margin: 6px;
+        width: 130px; /* Увеличены размеры для мобильных устройств */
+        height: 55px;
+        font-size: 16px;
       }
 
       button {
@@ -258,7 +260,6 @@
   <button id="musicToggleButton">Включить музыку</button>
 </div>
 
-<!-- Модальное окно для лидерборда -->
 <div id="leaderboardModal" style="display:none; position: fixed; top: 20%; left: 20%; background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px;">
   <h2 style="color: white;">Лидерборд</h2>
   <ul id="leaderboardList" style="color: #fff;"></ul>
