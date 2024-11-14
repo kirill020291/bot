@@ -92,6 +92,7 @@
       margin: 0 5px;
     }
 
+    /* Прямоугольники для слов */
     .box {
       width: 120px;
       height: 50px;
@@ -108,8 +109,22 @@
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
       word-wrap: break-word;
       overflow: hidden; /* Чтобы текст не выходил за пределы */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Press Start 2P', cursive;
     }
 
+    /* Принудительное уменьшение шрифта для длинных слов */
+    .box span {
+      display: inline-block;
+      max-width: 100%;
+      font-size: 16px;
+      word-break: break-word;
+      text-align: center;
+    }
+
+    /* Стили для наведения и изменений */
     .box:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
@@ -229,18 +244,25 @@
 </div>
 
 <div class="game-board" id="gameBoard">
-  <div class="column" id="russianWordsColumn"></div>
-  <div class="column" id="englishWordsColumn"></div>
+  <div class="column" id="russianWordsColumn">
+    <!-- Русские слова будут здесь -->
+  </div>
+  <div class="column" id="englishWordsColumn">
+    <!-- Английские слова будут здесь -->
+  </div>
 </div>
 
 <div class="bottom-section">
+  <button id="restartButton">Перезапустить</button>
   <button id="leaderboardButton">Лидерборд</button>
-  <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px;">
-    <h2 style="color: white;">Лидерборд</h2>
-    <ul id="leaderboardList" style="color: #fff;"></ul>
-    <button onclick="document.getElementById('leaderboardModal').style.display = 'none';">Закрыть</button>
-  </div>
   <button id="musicToggleButton">Включить музыку</button>
+</div>
+
+<!-- Модальное окно для лидерборда -->
+<div id="leaderboardModal" style="display:none; position: fixed; top: 20%; left: 20%; background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px;">
+  <h2 style="color: white;">Лидерборд</h2>
+  <ul id="leaderboardList" style="color: #fff;"></ul>
+  <button onclick="document.getElementById('leaderboardModal').style.display = 'none';">Закрыть</button>
 </div>
 
 <script type="module">
