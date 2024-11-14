@@ -16,29 +16,16 @@
       overflow: hidden;
     }
 
-    /* Облака */
-    .clouds {
+    /* Заменим облака на киберпанковский фон с неоновыми элементами */
+    .background {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .cloud {
-      position: absolute;
-      width: 200px;
-      height: 100px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 100px;
-      animation: float 15s linear infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateX(-200px); }
-      100% { transform: translateX(100vw); }
+      background: url('images/50514293.png') center center no-repeat;
+      background-size: cover;
+      z-index: -1;
     }
 
     /* Общая структура */
@@ -55,10 +42,10 @@
     }
 
     .timer, .score {
-      font-size: 30px;
+      font-size: 32px;
       font-weight: bold;
       color: #33ff33;
-      padding: 12px 20px;
+      padding: 15px 25px;
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
@@ -127,7 +114,8 @@
     /* Кнопки */
     button {
       padding: 12px 25px;
-      font-size: 18px;
+      font-size: 20px;
+      font-weight: bold;
       color: #e0e0e0;
       background-color: #ff007f;
       border: 2px solid #ff007f;
@@ -190,13 +178,7 @@
 </head>
 <body>
 
-<div class="clouds">
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-</div>
+<div class="background"></div>
 
 <div class="header">
   <div class="top-section">
@@ -212,13 +194,15 @@
 </div>
 
 <div class="bottom-section">
-  <button id="leaderboardButton">Лидерборд</button>
-  <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 8px; box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.8);">
-    <h2 style="color: #00ff00;">Лидерборд</h2>
-    <div id="leaderboardContent" style="color: #e0e0e0;">Загрузка...</div>
-    <button onclick="closeLeaderboard()" style="color: #ff007f;">Закрыть</button>
+  <div>
+    <button id="leaderboardButton">Лидерборд</button>
+    <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 8px; box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.8);">
+      <h2 style="color: #00ff00;">Лидерборд</h2>
+      <div id="leaderboardContent" style="color: #e0e0e0;">Загрузка...</div>
+      <button onclick="closeLeaderboard()" style="color: #ff007f;">Закрыть</button>
+    </div>
   </div>
-  <div class="bottom">
+  <div>
     <button id="musicToggleButton">Отключить музыку</button>
   </div>
 </div>
