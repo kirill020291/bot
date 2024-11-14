@@ -119,9 +119,10 @@
     .box span {
       display: inline-block;
       max-width: 100%;
-      font-size: 16px;
+      font-size: 14px; /* Уменьшение размера шрифта для длинных слов */
       word-break: break-word;
       text-align: center;
+      overflow: hidden;
     }
 
     /* Стили для наведения и изменений */
@@ -253,7 +254,6 @@
 </div>
 
 <div class="bottom-section">
-  <button id="restartButton">Перезапустить</button>
   <button id="leaderboardButton">Лидерборд</button>
   <button id="musicToggleButton">Включить музыку</button>
 </div>
