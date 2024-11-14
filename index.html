@@ -50,13 +50,14 @@
     /* Общая структура */
     .header {
       display: flex;
-      justify-content: space-evenly;
+      justify-content: center; /* Выравнивание кнопок по центру */
       align-items: center;
       margin-top: 20px;
       padding: 10px;
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 15px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      gap: 20px; /* Расстояние между кнопками */
     }
 
     .timer, .score {
@@ -211,7 +212,6 @@
   <button id="startButton">Начать игру</button>
   <div class="score" id="score">Очки: 0</div>
 </div>
-
 
 <div class="game-board" id="gameBoard">
   <div class="column" id="russianWordsColumn"></div>
