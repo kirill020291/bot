@@ -101,7 +101,7 @@
       margin: 10px;
       background-color: rgba(255, 255, 255, 0.5);
       color: #333;
-      font-size: 20px;
+      font-size: 16px; /* Уменьшенный размер шрифта */
       text-align: center;
       line-height: 80px;
       cursor: pointer;
@@ -118,23 +118,23 @@
       white-space: normal; /* Разрешает тексту переноситься */
     }
 
+    .box.selected {
+      background-color: rgba(255, 255, 255, 0.6);
+      border-color: #66cc66;
+    }
+
     /* Принудительное уменьшение шрифта для длинных слов */
     .box span {
       display: inline-block;
       max-width: 100%;
-      font-size: 20px; /* Размер шрифта */
+      font-size: 16px; /* Размер шрифта */
       word-break: break-word;
       text-align: center;
       overflow: hidden;
     }
 
-    /* Стили для наведения и изменений */
     .box:hover {
       background-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .box.selected {
-      background-color: rgba(255, 255, 255, 0.4);
     }
 
     .box.correct {
@@ -220,7 +220,7 @@
       .box {
         width: 130px; /* Увеличены размеры для мобильных устройств */
         height: 55px;
-        font-size: 16px;
+        font-size: 14px; /* Уменьшенный шрифт для мобильных */
       }
 
       button {
