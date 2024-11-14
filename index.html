@@ -1,169 +1,171 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Игра с угадыванием слов</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background-color: #87CEEB;
-      font-family: 'Roboto', sans-serif;
-      text-align: center;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0;
-      margin: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Игра с угадыванием слов</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    background-color: #87CEEB;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
 
-    /* Облака */
-    .clouds {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .cloud {
-      position: absolute;
-      width: 200px;
-      height: 100px;
-      background: #FFFFFF;
-      opacity: 0.6;
-      border-radius: 100px;
-      animation: float 15s linear infinite;
-    }
+  /* Добавление облаков */
+  .clouds {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
 
-    @keyframes float {
-      0% { transform: translateX(-200px); }
-      100% { transform: translateX(100vw); }
-    }
+  .cloud {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    background: #FFFFFF;
+    opacity: 0.6;
+    border-radius: 100px;
+    animation: float 15s linear infinite;
+  }
 
-    /* Шапка */
+  .cloud:nth-child(1) { left: 0%; top: 20%; animation-delay: 0s; }
+  .cloud:nth-child(2) { left: 25%; top: 40%; animation-delay: 5s; }
+  .cloud:nth-child(3) { left: 50%; top: 60%; animation-delay: 2s; }
+  .cloud:nth-child(4) { left: 75%; top: 80%; animation-delay: 8s; }
+  .cloud:nth-child(5) { left: 100%; top: 30%; animation-delay: 10s; }
+
+  @keyframes float {
+    0% { transform: translateX(-200px); }
+    100% { transform: translateX(100vw); }
+  }
+
+  /* Общая структура */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .timer, .score {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    background-color: #F0F8FF;
+    padding: 10px 15px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Игровое поле */
+  .game-board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px;
+  }
+
+  .box {
+    width: 120px;
+    height: 50px;
+    margin: 10px;
+    background-color: white;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .box:hover {
+    background-color: #e0f7fa;
+    transform: scale(1.05);
+  }
+
+  /* Кнопки */
+  button {
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #45A049;
+    transform: scale(1.05);
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+
+  .selected { background-color: #dcdcdc; }
+  .correct { background-color: green; transform: scale(1.1); }
+  .wrong { background-color: red; transform: scale(1.1); }
+  .timer.critical { color: red; animation: blink 1s step-start infinite; }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Мобильные стили */
+  @media (max-width: 600px) {
     .header {
-      display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
-      background-color: rgba(255, 255, 255, 0.8);
-      border-radius: 15px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-      margin: 20px;
-      width: 90%;
-      z-index: 10;
     }
-
     .top-section {
       display: flex;
-      width: 100%;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
-      gap: 15px;
-      font-size: 18px;
+      margin-top: 10px;
+      width: 100%;
     }
-
-    .timer, .score {
-      font-size: 24px;
-      font-weight: bold;
-      background-color: #F0F8FF;
-      padding: 10px 20px;
-      border-radius: 8px;
-      color: #333;
+    .top-section .timer,
+    .top-section .start-button,
+    .top-section .score {
       flex: 1;
       text-align: center;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      font-size: 16px;
     }
-
-    /* Кнопка начала игры */
-    #startButton {
-      padding: 12px 25px;
-      font-size: 18px;
-      color: white;
-      background-color: #4CAF50;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    #startButton:hover {
-      background-color: #45a049;
-      transform: scale(1.05);
-    }
-
-    /* Игровое поле */
     .game-board {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 30px;
-      width: 90%;
-      z-index: 5;
+      gap: 10px;
+      margin: 20px 0;
     }
-
-    .column {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .box {
-      width: 100%;
-      height: 60px;
-      background-color: white;
-      color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .box:hover {
-      background-color: #e0f7fa;
-      transform: scale(1.05);
-    }
-
-    /* Нижняя секция */
     .bottom-section {
       display: flex;
       justify-content: space-around;
+      margin-bottom: 10px;
       width: 100%;
-      margin-top: 30px;
     }
-
-    .bottom-section button {
-      font-size: 16px;
-      padding: 12px 20px;
-      color: white;
-      background-color: #f44336;
-      border: none;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
-      cursor: pointer;
-    }
-
-    .bottom-section button:hover {
-      background-color: #e53935;
-    }
-
-    /* Мобильные стили */
-    @media (max-width: 600px) {
-      .top-section, .bottom-section {
-        flex-direction: column;
-        gap: 10px;
-      }
-      .timer, .score, .game-board, .header {
-        font-size: 18px;
-        width: 100%;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
@@ -189,6 +191,11 @@
 
   <div class="bottom-section">
     <button id="leaderboardButton">Лидерборд</button>
+    <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+      <h2>Лидерборд</h2>
+      <div id="leaderboardContent">Загрузка...</div>
+      <button onclick="closeLeaderboard()">Закрыть</button>
+    </div>
     <button id="musicToggleButton">Отключить музыку</button>
   </div>
 </div>
