@@ -164,26 +164,25 @@
     }
   }
 
-#musicToggleButton {
-  padding: 10px 20px;
-  font-size: 14px;
-  background-color: #f44336;
+  #musicToggleButton {
+  display: inline-block !important; /* Убедитесь, что кнопка не скрыта */
+  font-size: 16px;
+  padding: 10px;
+  background-color: #4CAF50;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   transition: background-color 0.3s ease;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
 }
 
 #musicToggleButton:hover {
-  background-color: #e53935;
+  background-color: #4CAF50;
 }
 
 /* Убираем трансформации и стили, которые могут вызвать исчезновение */
 #musicToggleButton:active {
   transform: none;  /* Убираем любые трансформации при нажатии */
-  background-color: #e53935;  /* Сохраняем тот же цвет */
+  background-color: #4CAF50;  /* Сохраняем тот же цвет */
 }
 
 </style>
