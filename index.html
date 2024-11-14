@@ -94,14 +94,12 @@
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   }
 
-  .box:hover {
-    background-color: #e0f7fa;
-    transform: scale(1.05);
-  }
 
   /* Кнопки */
   button {
@@ -113,7 +111,7 @@
     border-radius: 25px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: transform 0.2s ease, background-color 0.3s ease;
   }
 
   button:hover {
@@ -122,7 +120,7 @@
   }
 
   button:active {
-    transform: none; /* Убираем трансформацию при клике */
+    transform: scale(0.95);
   }
 
   .selected { background-color: #dcdcdc; }
