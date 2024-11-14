@@ -6,28 +6,16 @@
 <title>Игра с угадыванием слов</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  /* Базовые настройки */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
   body {
-    background-color: #F3F8FF; /* Светлый фон для контраста */
+    background-color: #87CEEB;
     font-family: 'Roboto', sans-serif;
+    text-align: center;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    color: #333;
-    overflow: hidden;
-  }
-
-  .container {
-    max-width: 1200px;
-    width: 100%;
-    padding: 20px;
+    padding: 0;
+    margin: 0;
   }
 
   /* Облака */
@@ -45,7 +33,7 @@
     width: 200px;
     height: 100px;
     background: #FFFFFF;
-    opacity: 0.5;
+    opacity: 0.6;
     border-radius: 100px;
     animation: float 15s linear infinite;
   }
@@ -57,96 +45,118 @@
 
   /* Шапка */
   .header {
-    width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background: #ffffff;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 15px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    width: 90%;
   }
 
-  /* Таймер, очки, кнопки */
-  .top-section,
-  .bottom-section {
+  .top-section {
     display: flex;
+    width: 100%;
+    justify-content: space-between;
     align-items: center;
-    justify-content: space-around;
     gap: 10px;
+    font-size: 16px;
   }
 
-  .timer,
-  .score {
+  .timer, .score {
     font-size: 24px;
-    font-weight: 700;
-    padding: 10px 15px;
-    background: #F0F8FF;
+    font-weight: bold;
+    background-color: #F0F8FF;
+    padding: 10px;
     border-radius: 8px;
+    color: #333;
+    flex: 1;
+    text-align: center;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   }
 
-  button {
+  /* Кнопка начала игры */
+  #startButton {
     padding: 10px 20px;
     font-size: 16px;
-    color: #fff;
+    color: white;
     background-color: #4CAF50;
     border: none;
     border-radius: 8px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.3s ease;
+    transition: background-color 0.3s ease;
   }
-  button:hover { background-color: #45A049; transform: scale(1.05); }
-  button:active { transform: scale(0.95); }
+  #startButton:hover { background-color: #45a049; }
 
   /* Игровое поле */
   .game-board {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 15px;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
   }
 
-  /* Ячейки */
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .box {
     width: 100%;
     height: 50px;
-    background: #ffffff;
+    background-color: white;
+    color: black;
     display: flex;
-    align-items: center;
     justify-content: center;
-    color: #333;
-    font-weight: 500;
+    align-items: center;
     cursor: pointer;
-    border-radius: 5px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
   }
-  .box:hover { background-color: #e0f7fa; transform: scale(1.05); }
 
-  /* Анимация на последних секундах */
-  .timer.critical {
-    color: #e53935;
-    animation: blink 1s step-start infinite;
+  .box:hover {
+    background-color: #e0f7fa;
+    transform: scale(1.05);
   }
-  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Нижняя секция */
+  .bottom-section {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .bottom-section button {
+    font-size: 14px;
+    padding: 10px;
+    color: white;
+    background-color: #f44336;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .bottom-section button:hover {
+    background-color: #e53935;
+  }
 
   /* Мобильные стили */
-  @media (max-width: 768px) {
-    .container {
-      padding: 15px;
+  @media (max-width: 600px) {
+    .top-section, .bottom-section {
+      flex-direction: column;
+      gap: 5px;
     }
-    .header, .game-board {
-      padding: 10px;
-      border-radius: 5px;
+    .timer, .score, .game-board, .header {
+      font-size: 18px;
+      width: 100%;
     }
-    .timer, .score { font-size: 20px; }
-    button { font-size: 14px; padding: 8px 16px; }
-    .game-board { gap: 10px; }
   }
 </style>
 </head>
@@ -156,24 +166,20 @@
   <div class="cloud"></div>
   <div class="cloud"></div>
   <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
 </div>
 
-<div class="container">
-  <div class="header">
-    <div class="top-section">
-      <div class="timer" id="timer">60</div>
-      <button id="startButton">Начать игру</button>
-      <div class="score" id="score">Очки: 0</div>
-    </div>
+<div class="header">
+  <div class="top-section">
+    <div class="timer" id="timer">60</div>
+    <button id="startButton">Начать игру</button>
+    <div class="score" id="score">Очки: 0</div>
   </div>
 
   <div class="game-board" id="gameBoard">
-    <div class="box">Слово 1</div>
-    <div class="box">Слово 2</div>
-    <div class="box">Слово 3</div>
-    <div class="box">Слово 4</div>
-    <div class="box">Слово 5</div>
-    <div class="box">Слово 6</div>
+    <div class="column" id="russianWordsColumn"></div>
+    <div class="column" id="englishWordsColumn"></div>
   </div>
 
   <div class="bottom-section">
@@ -181,13 +187,6 @@
     <button id="musicToggleButton">Отключить музыку</button>
   </div>
 </div>
-
-<script>
-  // JavaScript логика будет добавлена здесь
-</script>
-
-</body>
-</html>
 
 <script type="module">
   import { initializeApp } from "firebase/app";
