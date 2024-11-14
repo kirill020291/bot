@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Игра с угадыванием слов</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Используем шрифт Pixel Art -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
       background-color: #212121;
@@ -16,8 +16,8 @@
       padding: 0;
     }
 
-    /* Добавление облаков */
-    .clouds {
+    /* Добавление разноцветных полупрозрачных шаров */
+    .balls {
       position: absolute;
       top: 0;
       left: 0;
@@ -27,18 +27,24 @@
       overflow: hidden;
     }
 
-    .cloud {
+    .ball {
       position: absolute;
-      width: 200px;
-      height: 100px;
-      background: rgba(255, 255, 255, 0.6);
-      border-radius: 100px;
-      animation: float 15s linear infinite;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      animation: float 10s linear infinite;
     }
 
+    .ball:nth-child(1) { left: 10%; top: 10%; background-color: rgba(255, 0, 0, 0.4); animation-delay: 0s; }
+    .ball:nth-child(2) { left: 30%; top: 50%; background-color: rgba(0, 255, 0, 0.4); animation-delay: 3s; }
+    .ball:nth-child(3) { left: 60%; top: 20%; background-color: rgba(0, 0, 255, 0.4); animation-delay: 5s; }
+    .ball:nth-child(4) { left: 80%; top: 70%; background-color: rgba(255, 255, 0, 0.4); animation-delay: 7s; }
+    .ball:nth-child(5) { left: 20%; top: 80%; background-color: rgba(255, 0, 255, 0.4); animation-delay: 9s; }
+
     @keyframes float {
-      0% { transform: translateX(-200px); }
-      100% { transform: translateX(100vw); }
+      0% { transform: translateY(-200px); }
+      100% { transform: translateY(100vh); }
     }
 
     /* Общая структура */
@@ -192,12 +198,12 @@
 </head>
 <body>
 
-<div class="clouds">
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
+<div class="balls">
+  <div class="ball"></div>
+  <div class="ball"></div>
+  <div class="ball"></div>
+  <div class="ball"></div>
+  <div class="ball"></div>
 </div>
 
 <div class="header">
