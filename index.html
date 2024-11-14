@@ -7,9 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #212121;
+      background-color: #f2f2f2;
       font-family: 'Press Start 2P', cursive;
-      color: #FFFFFF;
+      color: #333;
       text-align: center;
       overflow: hidden;
       margin: 0;
@@ -36,11 +36,11 @@
       animation: float 10s linear infinite;
     }
 
-    .ball:nth-child(1) { left: 10%; top: 10%; background-color: rgba(255, 0, 0, 0.4); animation-delay: 0s; }
-    .ball:nth-child(2) { left: 30%; top: 50%; background-color: rgba(0, 255, 0, 0.4); animation-delay: 3s; }
-    .ball:nth-child(3) { left: 60%; top: 20%; background-color: rgba(0, 0, 255, 0.4); animation-delay: 5s; }
-    .ball:nth-child(4) { left: 80%; top: 70%; background-color: rgba(255, 255, 0, 0.4); animation-delay: 7s; }
-    .ball:nth-child(5) { left: 20%; top: 80%; background-color: rgba(255, 0, 255, 0.4); animation-delay: 9s; }
+    .ball:nth-child(1) { left: 10%; top: 10%; background-color: rgba(255, 99, 71, 0.4); animation-delay: 0s; }
+    .ball:nth-child(2) { left: 30%; top: 50%; background-color: rgba(144, 238, 144, 0.4); animation-delay: 3s; }
+    .ball:nth-child(3) { left: 60%; top: 20%; background-color: rgba(173, 216, 230, 0.4); animation-delay: 5s; }
+    .ball:nth-child(4) { left: 80%; top: 70%; background-color: rgba(255, 239, 129, 0.4); animation-delay: 7s; }
+    .ball:nth-child(5) { left: 20%; top: 80%; background-color: rgba(255, 182, 193, 0.4); animation-delay: 9s; }
 
     @keyframes float {
       0% { transform: translateY(-200px); }
@@ -50,11 +50,11 @@
     /* Общая структура */
     .header {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-evenly;
       align-items: center;
       margin-top: 20px;
       padding: 10px;
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.6);
       border-radius: 15px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
@@ -62,11 +62,11 @@
     .timer, .score {
       font-size: 24px;
       font-weight: bold;
-      color: #33ff33;
-      background-color: rgba(0, 0, 0, 0.5);
+      color: #ffb3b3;
+      background-color: rgba(0, 0, 0, 0.7);
       padding: 10px 15px;
       border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
     }
 
     .timer.critical {
@@ -93,19 +93,19 @@
     }
 
     .box {
-      width: 120px;
+      width: 130px;
       height: 50px;
       margin: 10px;
-      background-color: rgba(255, 255, 255, 0.2);
-      color: #ff007f;
+      background-color: rgba(255, 255, 255, 0.5);
+      color: #333;
       font-size: 18px;
       text-align: center;
       line-height: 50px;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.3s ease;
-      border: 2px solid #33ff33;
+      border: 2px solid #ffb3b3;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
     }
 
     .box:hover {
@@ -117,33 +117,33 @@
     }
 
     .box.correct {
-      background-color: #00ff00;
-      color: #000;
-      box-shadow: 0 0 15px 5px rgba(0, 255, 0, 0.8);
+      background-color: #99ff99;
+      color: #333;
+      box-shadow: 0 0 15px 5px rgba(0, 255, 0, 0.6);
     }
 
     .box.wrong {
-      background-color: #ff0033;
+      background-color: #ff9999;
       color: #fff;
-      box-shadow: 0 0 15px 5px rgba(255, 0, 0, 0.8);
+      box-shadow: 0 0 15px 5px rgba(255, 0, 0, 0.6);
     }
 
     /* Кнопки */
     button {
       padding: 12px 25px;
       font-size: 18px;
-      color: #e0e0e0;
-      background-color: #ff007f;
-      border: 2px solid #ff007f;
+      color: #f2f2f2;
+      background-color: #ff80bf;
+      border: 2px solid #ff80bf;
       border-radius: 25px;
-      box-shadow: 0 0 10px rgba(255, 0, 127, 0.7);
+      box-shadow: 0 0 10px rgba(255, 128, 191, 0.7);
       cursor: pointer;
       transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     button:hover {
-      background-color: #ff1f9b;
-      box-shadow: 0 0 15px 5px rgba(255, 0, 127, 1);
+      background-color: #ff66b3;
+      box-shadow: 0 0 15px 5px rgba(255, 102, 179, 1);
     }
 
     button:active {
@@ -153,7 +153,7 @@
     /* Нижняя секция */
     .bottom-section {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-evenly;
       margin-top: 30px;
       width: 100%;
       position: fixed;
@@ -164,7 +164,7 @@
     .bottom-section button {
       font-size: 16px;
       padding: 10px 20px;
-      background-color: #f44336;
+      background-color: #ff6666;
       color: white;
       border: none;
       border-radius: 5px;
@@ -172,7 +172,7 @@
     }
 
     .bottom-section button:hover {
-      background-color: #e53935;
+      background-color: #ff4d4d;
     }
 
     /* Адаптация для мобильных устройств */
