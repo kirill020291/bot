@@ -16,24 +16,38 @@
       overflow: hidden;
     }
 
-    /* Заменим облака на киберпанковский фон с неоновыми элементами */
-    .background {
+    /* Облака */
+    .clouds {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: url('images/50514293.png') center center no-repeat;
-      background-size: cover;
-      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .cloud {
+      position: absolute;
+      width: 200px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 100px;
+      animation: float 15s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateX(-200px); }
+      100% { transform: translateX(100vw); }
     }
 
     /* Общая структура */
     .header {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column; /* Кнопки будут располагаться вертикально */
       align-items: center;
-      margin-top: 20px;
+      justify-content: center;
+      margin-top: 30px; /* Увеличиваем отступ сверху */
       padding: 20px;
       background-color: rgba(0, 0, 0, 0.7);
       border-radius: 15px;
@@ -41,14 +55,46 @@
       color: #33ff33;
     }
 
+    /* Размещение таймера и очков в одном ряду */
+    .top-section {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px; /* Отступ снизу для кнопки "Начать игру" */
+    }
+
     .timer, .score {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: bold;
       color: #33ff33;
-      padding: 15px 25px;
+      padding: 12px 20px;
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    }
+
+    /* Кнопка "Начать игру" */
+    #startButton {
+      padding: 15px 30px;
+      font-size: 22px;
+      color: #e0e0e0;
+      background-color: #ff007f;
+      border: 2px solid #ff007f;
+      border-radius: 25px;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.7);
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 20px; /* Отступ сверху для кнопки */
+    }
+
+    #startButton:hover {
+      background-color: #ff1f9b;
+      box-shadow: 0 0 15px 5px rgba(255, 0, 127, 1);
+    }
+
+    #startButton:active {
+      transform: scale(0.95);
     }
 
     /* Игровое поле */
@@ -114,8 +160,7 @@
     /* Кнопки */
     button {
       padding: 12px 25px;
-      font-size: 20px;
-      font-weight: bold;
+      font-size: 18px;
       color: #e0e0e0;
       background-color: #ff007f;
       border: 2px solid #ff007f;
@@ -137,21 +182,24 @@
     /* Мобильные стили */
     @media (max-width: 600px) {
       .header {
+        padding: 15px;
+      }
+
+      .top-section {
         flex-direction: column;
         align-items: center;
       }
 
-      .game-board {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+      .timer, .score {
+        font-size: 20px;
+        margin-bottom: 10px; /* Отступ между таймером и очками */
       }
 
-      .bottom-section {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 10px;
+      #startButton {
         width: 100%;
+        font-size: 20px;
+        padding: 15px 0;
+        margin-top: 15px;
       }
     }
 
@@ -178,7 +226,13 @@
 </head>
 <body>
 
-<div class="background"></div>
+<div class="clouds">
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+</div>
 
 <div class="header">
   <div class="top-section">
@@ -194,16 +248,11 @@
 </div>
 
 <div class="bottom-section">
-  <div>
-    <button id="leaderboardButton">Лидерборд</button>
-    <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 8px; box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.8);">
-      <h2 style="color: #00ff00;">Лидерборд</h2>
-      <div id="leaderboardContent" style="color: #e0e0e0;">Загрузка...</div>
-      <button onclick="closeLeaderboard()" style="color: #ff007f;">Закрыть</button>
-    </div>
-  </div>
-  <div>
-    <button id="musicToggleButton">Отключить музыку</button>
+  <button id="leaderboardButton">Лидерборд</button>
+  <div id="leaderboardModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 8px; box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.8);">
+    <h2 style="color: #00ff00;">Лидерборд</h2>
+    <div id="leaderboardContent" style="color: #e0e0e0;">Загрузка...</div>
+    <button id="closeLeaderboardButton">Закрыть</button>
   </div>
 </div>
 
